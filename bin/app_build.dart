@@ -157,13 +157,9 @@ class Builder {
     final hour = now.hour.toString().padLeft(2, '0');
     final year = '${now.year}'.substring(2);
 
-    var build = '$year$month$day';
+    final majorFromVersion = version.split('.').first;
 
-    print('build $build');
-
-    if (major != null) {
-      build = '$major$build';
-    }
+    var build = '${major ?? majorFromVersion}$year$month$day';
 
     if (platform != Platform.ios) {
       build += hour;
