@@ -13,22 +13,31 @@ void main(List<String> args) async {
     ..addFlag('clean-build', abbr: 'c', defaultsTo: false)
 
     ///
-    ..addOption('version', abbr: 'w')
     ..addOption('major', abbr: 'm')
     ..addOption('flavor', abbr: 'f')
     ..addOption('number', abbr: 'n')
-    ..addOption('platform', abbr: 'p', allowed: ['google', 'huawei', 'ios']);
+    ..addOption('version', abbr: 'w')
+    ..addOption(
+      'platform',
+      abbr: 'p',
+      allowed: ['google', 'huawei', 'ios'],
+      defaultsTo: 'google',
+    );
 
   final arguments = parser.parse(args);
 
-  final versionPattern = RegExp(r'^[0-9]{1,2}.[0-9]{1,2}.[0-9]{1,2}$');
+  final version = arguments['version'];
+  final platform = arguments['platform'];
+  final major = arguments['major'] ?? version.split('.').first;
+  final buildNumber = arguments['number'];
 
-  if (arguments['version'] == null ||
-      !versionPattern.hasMatch(arguments['version'])) {
+  final versionPattern = RegExp(r'^\d{1,}.\d]{1,}.\d{1,}$');
+
+  if (version == null || !versionPattern.hasMatch(version)) {
     final message = [
       '',
-      '${arguments['version']} has not valid version format. (pattern=${versionPattern.pattern})',
-      'example usage app_build --version 1.1.0 -p google',
+      '$version has not valid version format. (pattern=${versionPattern.pattern})',
+      'Example usage app_build -w 1.1.0 -p google',
       '',
     ];
 
@@ -36,11 +45,11 @@ void main(List<String> args) async {
     exit(1);
   }
 
-  if (arguments['platform'] == null) {
+  if (platform == null) {
     final message = [
       '',
       'Platform is not defined. ',
-      'example usage app_build -w 1.1.0 -p google',
+      'Example usage app_build -w 1.1.0 -p google',
       '',
     ];
 
@@ -49,10 +58,10 @@ void main(List<String> args) async {
   }
 
   final builder = Builder(
-    platform: arguments['platform'],
-    version: arguments['version'],
-    major: arguments['major'],
-    buildNumber: arguments['number'],
+    platform: platform,
+    version: version,
+    major: major,
+    buildNumber: buildNumber,
   );
 
   if (await builder() && arguments['build']) {
@@ -145,8 +154,6 @@ class Builder {
   }
 
   (String, String) getVersion() {
-    print('buildNumber $buildNumber');
-
     if (buildNumber != null) {
       return (version, buildNumber!);
     }
