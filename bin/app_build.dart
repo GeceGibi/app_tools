@@ -31,7 +31,7 @@ void main(List<String> args) async {
   final major = arguments['major'] ?? version.split('.').first;
   final buildNumber = arguments['number'];
 
-  final versionPattern = RegExp(r'^\d{1,}.\d]{1,}.\d{1,}$');
+  final versionPattern = RegExp(r'^\d{1,}.\d{1,}.\d{1,}$');
 
   if (version == null || !versionPattern.hasMatch(version)) {
     final message = [
