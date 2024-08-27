@@ -11,9 +11,8 @@ Future<void> main(List<String> args) async {
   final result = parser.parse(args);
   final pwd = Directory.current.path;
 
-  final iosDirectory = Directory('$pwd/ios').path;
-  final haveIOS = Directory(iosDirectory).existsSync();
-  final haveL10n = File('$pwd/l10n.yaml').existsSync();
+  final iosDir = Directory('$pwd/ios');
+  final l10nConfig = File('$pwd/l10n.yaml');
 
   final works = <Work>[
     if (result['clean'])
@@ -31,30 +30,30 @@ Future<void> main(List<String> args) async {
     ),
 
     ///! iOS
-    if (haveIOS) ...[
+    if (iosDir.existsSync()) ...[
       Work(
         description: 'Pod deintegrate',
         command: 'pod',
         arguments: ['deintegrate'],
-        pwd: iosDirectory,
+        pwd: iosDir.path,
       ),
       Work(
         description: 'Remove Pod File',
         command: 'rm',
         arguments: ['-rf', 'Pods'],
-        pwd: iosDirectory,
+        pwd: iosDir.path,
       ),
       Work(
         description: 'Remove Cached iOS Flutter Libs',
         command: 'rm',
         arguments: ['-rf', '.symlinks'],
-        pwd: iosDirectory,
+        pwd: iosDir.path,
       ),
       Work(
         description: 'Remove Podfile.lock',
         command: 'rm',
         arguments: ['-rf', 'Podfile.lock'],
-        pwd: iosDirectory,
+        pwd: iosDir.path,
       ),
     ],
 
@@ -67,16 +66,16 @@ Future<void> main(List<String> args) async {
     ),
 
     ///! iOS
-    if (haveIOS)
+    if (iosDir.existsSync())
       Work(
         description: 'Pod install & update',
         command: 'pod',
         arguments: ['install', '--repo-update'],
-        pwd: iosDirectory,
+        pwd: iosDir.path,
       ),
 
     ///! Home
-    if (haveL10n)
+    if (l10nConfig.existsSync())
       Work(
         description: 'Generate L10N',
         command: 'flutter',

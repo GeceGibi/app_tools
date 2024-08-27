@@ -8,15 +8,14 @@ void main(List<String> args) async {
 
     ///
     ..addFlag('build', abbr: 'b', defaultsTo: false)
-    ..addFlag('verbose', abbr: 'v', defaultsTo: false)
     ..addFlag('obfuscate', abbr: 'o', defaultsTo: false)
-    ..addFlag('clean-build', abbr: 'c', defaultsTo: false)
+    ..addFlag('clean', abbr: 'c', defaultsTo: false)
 
     ///
     ..addOption('major', abbr: 'm')
     ..addOption('flavor', abbr: 'f')
     ..addOption('number', abbr: 'n')
-    ..addOption('version', abbr: 'w')
+    ..addOption('version', abbr: 'v')
     ..addOption(
       'platform',
       abbr: 'p',
@@ -58,10 +57,10 @@ void main(List<String> args) async {
   }
 
   final builder = Builder(
+    buildNumber: buildNumber,
     platform: platform,
     version: version,
     major: major,
-    buildNumber: buildNumber,
   );
 
   if (await builder() && arguments['build']) {
@@ -70,7 +69,7 @@ void main(List<String> args) async {
     Printer.yellow.log('${packageType.toUpperCase()} build started !');
     print(' ');
 
-    if (arguments['clean-build']) {
+    if (arguments['clean']) {
       await Worker.run(
         Work(
           command: 'flutter',
@@ -153,7 +152,7 @@ class Builder {
     return true;
   }
 
-  (String, String) getVersion() {
+  (String version, String build) getVersion() {
     if (buildNumber != null) {
       return (version, buildNumber!);
     }
