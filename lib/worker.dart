@@ -1,6 +1,6 @@
 import 'dart:io';
 
-part 'printer.dart';
+import 'package:app_tools/printer.dart';
 
 class Work {
   const Work({
@@ -18,8 +18,8 @@ class Work {
 
 class Worker {
   static Future<int> run(Work work, {bool verbose = false}) async {
-    Printer.blue.log('┌⏺ ${work.description}');
-    Printer.green.log('├❯ ${work.command} ${work.arguments.join(" ")}');
+    Printer.info('┌⏺ ${work.description}');
+    Printer.success('├❯ ${work.command} ${work.arguments.join(" ")}');
 
     final process = await Process.run(
       work.command,
@@ -31,16 +31,14 @@ class Worker {
       final out = (process.stdout as String).trim();
 
       if (out.isNotEmpty) {
-        Printer.white.log(
-          out.split('\n').map((line) => '├❯ $line').join('\n'),
-        );
+        print(out.split('\n').map((line) => '├❯ $line').join('\n'));
       }
     }
 
     if (process.exitCode != 0) {
-      Printer.red.log('└❯ exit(${process.exitCode}): ${process.stderr}');
+      Printer.error('└❯ exit(${process.exitCode}): ${process.stderr}');
     } else {
-      Printer.green.log('└❯ exit(${process.exitCode})');
+      Printer.success('└❯ exit(${process.exitCode})');
     }
 
     return process.exitCode;

@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:app_tools/printer.dart';
 import 'package:app_tools/worker.dart';
 import 'package:args/args.dart';
 
 Future<void> main(List<String> args) async {
-  var parser = ArgParser()
+  final parser = ArgParser()
     ..addFlag('clean', abbr: 'c', defaultsTo: true)
-    ..addFlag('verbose', abbr: 'v', defaultsTo: false);
+    ..addFlag('verbose', abbr: 'v');
 
   final result = parser.parse(args);
   final pwd = Directory.current.path;
@@ -15,7 +16,7 @@ Future<void> main(List<String> args) async {
   final l10nConfig = File('$pwd/l10n.yaml');
 
   final works = <Work>[
-    if (result['clean'])
+    if (result.flag('clean'))
       Work(
         description: 'Clean Flutter Project',
         command: 'flutter',
@@ -97,13 +98,13 @@ Future<void> main(List<String> args) async {
 
   final ext = '#' * 24;
 
-  Printer.yellow.log('\n$ext re-install started $ext\n');
-  Printer.cyan.log('pwd: $pwd\n');
+  Printer.warning('\n$ext re-install started $ext\n');
+  Printer.info('pwd: $pwd\n');
 
   for (final work in works) {
-    await Worker.run(work, verbose: result['verbose']);
+    await Worker.run(work, verbose: result.flag('verbose'));
     print('\n');
   }
 
-  Printer.yellow.log('$ext re-install end $ext');
+  Printer.warning('$ext re-install end $ext');
 }
