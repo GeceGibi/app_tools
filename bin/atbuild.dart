@@ -7,7 +7,6 @@ import 'package:args/args.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 final cwd = Directory.current.path;
-final versionFile = File('.versions.json');
 final versions = <String, Version>{};
 
 String upgradeVersionName(String versionName, {String? type}) {
@@ -30,13 +29,9 @@ String upgradeVersionName(String versionName, {String? type}) {
   // return segments.join('.');
 }
 
-void readEnvFile() {
-  if (!versionFile.existsSync()) {
-    throw Exception('Version file not found.');
-  }
-
+void readEnvFile(File file) {
   final data = Map<String, dynamic>.from(
-    jsonDecode(versionFile.readAsStringSync()) as Map,
+    jsonDecode(file.readAsStringSync()) as Map,
   );
 
   versions.addEntries([
@@ -48,7 +43,7 @@ void readEnvFile() {
   ]);
 }
 
-void updateEnvFile() {
+void updateEnvFile(File file) {
   const encoder = JsonEncoder.withIndent('  ');
   final bytes = utf8.encode(
     encoder.convert(
@@ -58,7 +53,7 @@ void updateEnvFile() {
     ),
   );
 
-  versionFile.writeAsBytesSync(bytes);
+  file.writeAsBytesSync(bytes);
 }
 
 (String, int) generateVersion(String platform, {String? type}) {
@@ -158,6 +153,7 @@ void main(List<String> args) async {
         'huawei': 'Build (*.apk) file',
       },
     )
+    ..addOption('file', help: '.version.json path', defaultsTo: '.version.json')
     ..addOption('flavor', abbr: 'f')
     ..addOption('version-type', abbr: 't', defaultsTo: 'version')
     ..addFlag(
@@ -184,8 +180,10 @@ void main(List<String> args) async {
     return;
   }
 
+  final versionFile = File(arguments.option('file')!);
+
   /// Read File
-  readEnvFile();
+  readEnvFile(versionFile);
 
   final platform = arguments.option('platform');
   final versionType = arguments.option('version-type');
@@ -278,5 +276,5 @@ void main(List<String> args) async {
     print('');
   }
 
-  updateEnvFile();
+  updateEnvFile(versionFile);
 }
