@@ -91,20 +91,20 @@ Future<void> main(List<String> args) async {
         'run',
         'build_runner',
         'build',
-        '--delete-conflicting-outputs'
+        '--delete-conflicting-outputs',
       ],
     ),
   ];
 
-  final ext = '#' * 24;
-
-  Printer.warning('\n$ext re-install started $ext\n');
-  Printer.info('pwd: $pwd\n');
+  print('');
+  Printer.warning('Reinstall started..');
+  Printer.info('pwd: $pwd');
+  print('');
 
   for (final work in works) {
-    await Worker.run(work, verbose: result.flag('verbose'));
-    print('\n');
+    await work.run(verbose: result.flag('verbose'));
+    print('');
   }
 
-  Printer.warning('$ext re-install end $ext');
+  Printer.warning('Reinstall end.');
 }

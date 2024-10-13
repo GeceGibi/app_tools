@@ -20,8 +20,6 @@ Version _$VersionFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Version {
-  String get platform => throw _privateConstructorUsedError;
-  bool get uploaded => throw _privateConstructorUsedError;
   @JsonKey(name: 'build_name')
   String get buildName => throw _privateConstructorUsedError;
   @JsonKey(name: 'build_number')
@@ -44,9 +42,7 @@ abstract class $VersionCopyWith<$Res> {
       _$VersionCopyWithImpl<$Res, Version>;
   @useResult
   $Res call(
-      {String platform,
-      bool uploaded,
-      @JsonKey(name: 'build_name') String buildName,
+      {@JsonKey(name: 'build_name') String buildName,
       @JsonKey(name: 'build_number') int buildNumber,
       @JsonKey(name: 'build_number_pattern') String? buildNumberPattern});
 }
@@ -66,21 +62,11 @@ class _$VersionCopyWithImpl<$Res, $Val extends Version>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? platform = null,
-    Object? uploaded = null,
     Object? buildName = null,
     Object? buildNumber = null,
     Object? buildNumberPattern = freezed,
   }) {
     return _then(_value.copyWith(
-      platform: null == platform
-          ? _value.platform
-          : platform // ignore: cast_nullable_to_non_nullable
-              as String,
-      uploaded: null == uploaded
-          ? _value.uploaded
-          : uploaded // ignore: cast_nullable_to_non_nullable
-              as bool,
       buildName: null == buildName
           ? _value.buildName
           : buildName // ignore: cast_nullable_to_non_nullable
@@ -105,9 +91,7 @@ abstract class _$$VersionImplCopyWith<$Res> implements $VersionCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String platform,
-      bool uploaded,
-      @JsonKey(name: 'build_name') String buildName,
+      {@JsonKey(name: 'build_name') String buildName,
       @JsonKey(name: 'build_number') int buildNumber,
       @JsonKey(name: 'build_number_pattern') String? buildNumberPattern});
 }
@@ -125,21 +109,11 @@ class __$$VersionImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? platform = null,
-    Object? uploaded = null,
     Object? buildName = null,
     Object? buildNumber = null,
     Object? buildNumberPattern = freezed,
   }) {
     return _then(_$VersionImpl(
-      platform: null == platform
-          ? _value.platform
-          : platform // ignore: cast_nullable_to_non_nullable
-              as String,
-      uploaded: null == uploaded
-          ? _value.uploaded
-          : uploaded // ignore: cast_nullable_to_non_nullable
-              as bool,
       buildName: null == buildName
           ? _value.buildName
           : buildName // ignore: cast_nullable_to_non_nullable
@@ -160,19 +134,13 @@ class __$$VersionImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$VersionImpl implements _Version {
   const _$VersionImpl(
-      {required this.platform,
-      required this.uploaded,
-      @JsonKey(name: 'build_name') required this.buildName,
+      {@JsonKey(name: 'build_name') required this.buildName,
       @JsonKey(name: 'build_number') required this.buildNumber,
       @JsonKey(name: 'build_number_pattern') this.buildNumberPattern});
 
   factory _$VersionImpl.fromJson(Map<String, dynamic> json) =>
       _$$VersionImplFromJson(json);
 
-  @override
-  final String platform;
-  @override
-  final bool uploaded;
   @override
   @JsonKey(name: 'build_name')
   final String buildName;
@@ -185,7 +153,7 @@ class _$VersionImpl implements _Version {
 
   @override
   String toString() {
-    return 'Version(platform: $platform, uploaded: $uploaded, buildName: $buildName, buildNumber: $buildNumber, buildNumberPattern: $buildNumberPattern)';
+    return 'Version(buildName: $buildName, buildNumber: $buildNumber, buildNumberPattern: $buildNumberPattern)';
   }
 
   @override
@@ -193,10 +161,6 @@ class _$VersionImpl implements _Version {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$VersionImpl &&
-            (identical(other.platform, platform) ||
-                other.platform == platform) &&
-            (identical(other.uploaded, uploaded) ||
-                other.uploaded == uploaded) &&
             (identical(other.buildName, buildName) ||
                 other.buildName == buildName) &&
             (identical(other.buildNumber, buildNumber) ||
@@ -207,8 +171,8 @@ class _$VersionImpl implements _Version {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, platform, uploaded, buildName,
-      buildNumber, buildNumberPattern);
+  int get hashCode =>
+      Object.hash(runtimeType, buildName, buildNumber, buildNumberPattern);
 
   /// Create a copy of Version
   /// with the given fields replaced by the non-null parameter values.
@@ -228,19 +192,13 @@ class _$VersionImpl implements _Version {
 
 abstract class _Version implements Version {
   const factory _Version(
-      {required final String platform,
-      required final bool uploaded,
-      @JsonKey(name: 'build_name') required final String buildName,
+      {@JsonKey(name: 'build_name') required final String buildName,
       @JsonKey(name: 'build_number') required final int buildNumber,
       @JsonKey(name: 'build_number_pattern')
       final String? buildNumberPattern}) = _$VersionImpl;
 
   factory _Version.fromJson(Map<String, dynamic> json) = _$VersionImpl.fromJson;
 
-  @override
-  String get platform;
-  @override
-  bool get uploaded;
   @override
   @JsonKey(name: 'build_name')
   String get buildName;

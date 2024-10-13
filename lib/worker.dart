@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_tools/printer.dart';
@@ -7,6 +8,7 @@ class Work {
     required this.description,
     required this.command,
     required this.arguments,
+    this.onComplete,
     this.pwd,
   });
 
@@ -14,33 +16,34 @@ class Work {
   final String command;
   final String? pwd;
   final List<String> arguments;
-}
+  final void Function(int statusCode)? onComplete;
 
-class Worker {
-  static Future<int> run(Work work, {bool verbose = false}) async {
-    Printer.info('┌⏺ ${work.description}');
-    Printer.success('├❯ ${work.command} ${work.arguments.join(" ")}');
+  Future<void> run({bool verbose = false}) async {
+    Printer.info('┌⏺ $description');
+    Printer.success('├❯ $command ${arguments.join(" ")}');
 
-    final process = await Process.run(
-      work.command,
-      work.arguments,
-      workingDirectory: work.pwd,
-    );
+    final process = await Process.start(
+      command,
+      arguments,
+      workingDirectory: pwd,
+    )
+      ..stderr.listen((e) => Printer.error(utf8.decode(e).trim()))
+      ..stdout.listen((e) {
+        if (!verbose) {
+          return;
+        }
 
-    if (verbose) {
-      final out = (process.stdout as String).trim();
+        print(utf8.decode(e).trim());
+      });
 
-      if (out.isNotEmpty) {
-        print(out.split('\n').map((line) => '├❯ $line').join('\n'));
-      }
-    }
+    final exitCode = await process.exitCode;
 
-    if (process.exitCode != 0) {
-      Printer.error('└❯ exit(${process.exitCode}): ${process.stderr}');
+    if (exitCode != 0) {
+      Printer.error('└❯ exit($exitCode)');
     } else {
-      Printer.success('└❯ exit(${process.exitCode})');
+      Printer.success('└❯ exit($exitCode)');
     }
 
-    return process.exitCode;
+    onComplete?.call(exitCode);
   }
 }
