@@ -111,6 +111,12 @@ Future<void> updateProjectFiles(
 
 Future<void> updateYaml(String buildName, int buildNumber) async {
   final pubspecFile = File('$cwd/pubspec.yaml');
+
+  if (!pubspecFile.existsSync()) {
+    Printer.warning('pubspec.yaml file not found on ${pubspecFile.path}');
+    return;
+  }
+
   final pubspecLines = await pubspecFile.readAsLines();
 
   await pubspecFile.writeAsString(
@@ -129,6 +135,12 @@ Future<void> updateYaml(String buildName, int buildNumber) async {
 
 Future<void> iOSUpdatePlist(String buildName, int buildNumber) async {
   final pListFile = File('$cwd/ios/Runner/Info.plist');
+
+  if (!pListFile.existsSync()) {
+    Printer.warning('Info.plist file not found on ${pListFile.path}');
+    return;
+  }
+
   final pListLines = await pListFile.readAsLines();
   final pattern = RegExp(r'\t');
 
