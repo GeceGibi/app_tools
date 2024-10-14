@@ -11,17 +11,17 @@ final versions = <String, Version>{};
 const template = '''
 {
   "google": {
-    "build_name": "0.0.1",
+    "build_name": "1.0.0",
     "build_number": 1,
     "build_number_pattern": "1yyMMddHH"
   },
   "huawei": {
-    "build_name": "0.0.1",
+    "build_name": "1.0.0",
     "build_number": 1,
     "build_number_pattern": "1yyMMddHH"
   },
   "ios": {
-    "build_name": "0.0.1",
+    "build_name": "1.0.0",
     "build_number": 1,
     "build_number_pattern": "1yyMMdd"
   }
