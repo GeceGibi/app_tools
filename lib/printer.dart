@@ -14,4 +14,8 @@ abstract class Printer {
   static void info(String text) {
     print('\x1B[36m$text\x1B[0m');
   }
+
+  static void write(String text) {
+    print(text);
+  }
 }

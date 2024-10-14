@@ -17,6 +17,7 @@ class Version with _$Version {
       _$VersionFromJson(json);
 
   String toEnvLine(String platform) {
-    return '$platform=$buildName+$buildNumber${buildNumberPattern != null ? '|$buildNumberPattern' : ''}';
+    final pattern = buildNumberPattern != null ? '|$buildNumberPattern' : '';
+    return '$platform=$buildName+$buildNumber$pattern';
   }
 }

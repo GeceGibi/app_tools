@@ -201,7 +201,7 @@ void main(List<String> args) async {
   final arguments = parser.parse(args);
 
   if (arguments.flag('help')) {
-    print(parser.usage);
+    Printer.write(parser.usage);
     return;
   }
 
@@ -237,7 +237,7 @@ void main(List<String> args) async {
     buildNumber,
   ) = generateVersion(platform, type: versionType);
 
-  print('');
+  Printer.write('');
   Printer.info('*' * 60);
   Printer.info('Platform: $platform');
   Printer.info('Build Name: $buildName');
@@ -245,7 +245,7 @@ void main(List<String> args) async {
   Printer.info('Deploy to Production: ${arguments.flag('production')}');
   Printer.info('Working Directory: $cwd');
   Printer.info('*' * 60);
-  print('');
+  Printer.write('');
 
   /// Update Project Files
   await updateProjectFiles(platform, buildName, buildNumber);
@@ -312,7 +312,7 @@ void main(List<String> args) async {
 
   for (final work in works) {
     await work.run(verbose: arguments.flag('verbose'));
-    print('');
+    Printer.write('');
   }
 
   updateEnvFile(versionFile);

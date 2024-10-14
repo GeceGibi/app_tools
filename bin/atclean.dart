@@ -96,14 +96,14 @@ Future<void> main(List<String> args) async {
     ),
   ];
 
-  print('');
+  Printer.write('');
   Printer.warning('Reinstall started..');
   Printer.info('pwd: $pwd');
-  print('');
+  Printer.write('');
 
   for (final work in works) {
     await work.run(verbose: result.flag('verbose'));
-    print('');
+    Printer.write('');
   }
 
   Printer.warning('Reinstall end.');

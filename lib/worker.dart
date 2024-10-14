@@ -19,29 +19,29 @@ class Work {
   final void Function(int statusCode)? onComplete;
 
   Future<void> run({bool verbose = false}) async {
-    Printer.info('┌⏺ $description');
-    Printer.success('├❯ $command ${arguments.join(" ")}');
+    Printer.warning('┌⏺ $description');
+    Printer.info('├❯ Running: $command ${arguments.join(" ")}');
 
     final process = await Process.start(
       command,
       arguments,
       workingDirectory: pwd,
     )
-      ..stderr.listen((e) => Printer.error(utf8.decode(e).trim()))
-      ..stdout.listen((e) {
+      ..stderr.listen((bytes) => Printer.error(utf8.decode(bytes).trim()))
+      ..stdout.listen((bytes) {
         if (!verbose) {
           return;
         }
 
-        print(utf8.decode(e).trim());
+        Printer.write(utf8.decode(bytes).trim());
       });
 
     final exitCode = await process.exitCode;
 
-    if (exitCode != 0) {
-      Printer.error('└❯ exit($exitCode)');
+    if (exitCode == 0) {
+      Printer.success('└❯ Done, exitCode($exitCode)');
     } else {
-      Printer.success('└❯ exit($exitCode)');
+      Printer.error('└❯ Failed, exitCode($exitCode)');
     }
 
     onComplete?.call(exitCode);
