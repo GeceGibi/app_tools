@@ -4,3 +4,4 @@ analyzer:
   errors:
     invalid_annotation_target: ignore
     avoid_print: ignore
+    public_member_api_docs: ignore
