@@ -8,6 +8,24 @@ import 'package:intl/intl.dart' show DateFormat;
 
 final cwd = Directory.current.path;
 final versions = <String, Version>{};
+const template = '''
+{
+  "google": {
+    "build_name": "0.0.1",
+    "build_number": 1,
+    "build_number_pattern": "1yyMMddHH"
+  },
+  "huawei": {
+    "build_name": "0.0.1",
+    "build_number": 1,
+    "build_number_pattern": "1yyMMddHH"
+  },
+  "ios": {
+    "build_name": "0.0.1",
+    "build_number": 1,
+    "build_number_pattern": "1yyMMdd"
+  }
+}''';
 
 String upgradeVersionName(String versionName, {String? type}) {
   return versionName;
@@ -171,12 +189,27 @@ void main(List<String> args) async {
     ..addFlag('obfuscate', abbr: 'o', defaultsTo: true)
     ..addFlag('build', abbr: 'b')
     ..addFlag('verbose')
+    ..addFlag('init')
     ..addFlag('help');
 
   final arguments = parser.parse(args);
 
   if (arguments.flag('help')) {
     print(parser.usage);
+    return;
+  }
+
+  if (arguments.flag('init')) {
+    final file = File('$cwd/.versions.json');
+
+    if (file.existsSync()) {
+      Printer.warning('Version file already exist.');
+      return;
+    }
+
+    file
+      ..createSync(recursive: true)
+      ..writeAsStringSync(template);
     return;
   }
 
