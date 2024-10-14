@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:app_tools/models/models.dart';
 import 'package:app_tools/printer.dart';
@@ -8,24 +7,11 @@ import 'package:intl/intl.dart' show DateFormat;
 
 final cwd = Directory.current.path;
 final versions = <String, Version>{};
-const template = '''
-{
-  "google": {
-    "build_name": "1.0.0",
-    "build_number": 1,
-    "build_number_pattern": "1yyMMddHH"
-  },
-  "huawei": {
-    "build_name": "1.0.0",
-    "build_number": 1,
-    "build_number_pattern": "1yyMMddHH"
-  },
-  "ios": {
-    "build_name": "1.0.0",
-    "build_number": 1,
-    "build_number_pattern": "1yyMMdd"
-  }
-}''';
+const template = [
+  'google=1.0.0+1|1yyMMddHH+',
+  'huawei=1.0.0+1|1yyMMddHH+',
+  'ios=1.0.0+1|1yyMMddHH+',
+];
 
 String upgradeVersionName(String versionName, {String? type}) {
   return versionName;
@@ -48,30 +34,34 @@ String upgradeVersionName(String versionName, {String? type}) {
 }
 
 void readEnvFile(File file) {
-  final data = Map<String, dynamic>.from(
-    jsonDecode(file.readAsStringSync()) as Map,
-  );
+  for (final line in file.readAsLinesSync()) {
+    final platformSplit = line.split('=');
+    final patternSplit = platformSplit.last.split('|');
+    final versionSplit = patternSplit.first.split('+');
 
-  versions.addEntries([
-    for (final entry in data.entries)
-      MapEntry(
-        entry.key,
-        Version.fromJson(Map<String, dynamic>.from(entry.value as Map)),
-      ),
-  ]);
+    if (platformSplit.length <= 1) {
+      continue;
+    }
+
+    versions.addAll(
+      {
+        platformSplit.first: Version(
+          buildName: versionSplit.first,
+          buildNumber: int.parse(versionSplit.last),
+          buildNumberPattern:
+              patternSplit.length > 1 ? patternSplit.last : null,
+        ),
+      },
+    );
+  }
 }
 
 void updateEnvFile(File file) {
-  const encoder = JsonEncoder.withIndent('  ');
-  final bytes = utf8.encode(
-    encoder.convert(
-      versions.map((key, value) {
-        return MapEntry(key, value.toJson());
-      }),
-    ),
-  );
+  final lines = [
+    for (final entry in versions.entries) entry.value.toEnvLine(entry.key),
+  ];
 
-  file.writeAsBytesSync(bytes);
+  file.writeAsStringSync(lines.join('\n'));
 }
 
 (String, int) generateVersion(String platform, {String? type}) {
@@ -173,8 +163,8 @@ void main(List<String> args) async {
     )
     ..addOption(
       'file',
-      help: '.versions.json path',
-      defaultsTo: '.versions.json',
+      help: '.versions.env path',
+      defaultsTo: '.versions.env',
     )
     ..addOption('flavor', abbr: 'f')
     ..addOption('version-type', abbr: 't', defaultsTo: 'version')
@@ -204,7 +194,7 @@ void main(List<String> args) async {
   }
 
   if (arguments.flag('init')) {
-    final file = File('$cwd/.versions.json');
+    final file = File('$cwd/.versions.env');
 
     if (file.existsSync()) {
       Printer.warning('Version file already exist.');
@@ -213,7 +203,7 @@ void main(List<String> args) async {
 
     file
       ..createSync(recursive: true)
-      ..writeAsStringSync(template);
+      ..writeAsStringSync(template.join('\n'));
     return;
   }
 

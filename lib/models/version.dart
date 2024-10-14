@@ -11,6 +11,12 @@ class Version with _$Version {
     @JsonKey(name: 'build_number_pattern') String? buildNumberPattern,
   }) = _Version;
 
+  const Version._();
+
   factory Version.fromJson(Map<String, dynamic> json) =>
       _$VersionFromJson(json);
+
+  String toEnvLine(String platform) {
+    return '$platform=$buildName+$buildNumber${buildNumberPattern != null ? '|$buildNumberPattern' : ''}';
+  }
 }

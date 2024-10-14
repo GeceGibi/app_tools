@@ -132,11 +132,12 @@ class __$$VersionImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$VersionImpl implements _Version {
+class _$VersionImpl extends _Version {
   const _$VersionImpl(
       {@JsonKey(name: 'build_name') required this.buildName,
       @JsonKey(name: 'build_number') required this.buildNumber,
-      @JsonKey(name: 'build_number_pattern') this.buildNumberPattern});
+      @JsonKey(name: 'build_number_pattern') this.buildNumberPattern})
+      : super._();
 
   factory _$VersionImpl.fromJson(Map<String, dynamic> json) =>
       _$$VersionImplFromJson(json);
@@ -190,12 +191,13 @@ class _$VersionImpl implements _Version {
   }
 }
 
-abstract class _Version implements Version {
+abstract class _Version extends Version {
   const factory _Version(
       {@JsonKey(name: 'build_name') required final String buildName,
       @JsonKey(name: 'build_number') required final int buildNumber,
       @JsonKey(name: 'build_number_pattern')
       final String? buildNumberPattern}) = _$VersionImpl;
+  const _Version._() : super._();
 
   factory _Version.fromJson(Map<String, dynamic> json) = _$VersionImpl.fromJson;
 
