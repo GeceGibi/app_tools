@@ -171,7 +171,11 @@ void main(List<String> args) async {
         'huawei': 'Build (*.apk) file',
       },
     )
-    ..addOption('file', help: '.version.json path', defaultsTo: '.version.json')
+    ..addOption(
+      'file',
+      help: '.versions.json path',
+      defaultsTo: '.versions.json',
+    )
     ..addOption('flavor', abbr: 'f')
     ..addOption('version-type', abbr: 't', defaultsTo: 'version')
     ..addFlag(

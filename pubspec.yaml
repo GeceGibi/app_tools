@@ -1,6 +1,6 @@
 name: app_tools
 description: A sample command-line application.
-version: 0.0.1+4
+version: 0.0.1+5
 
 environment:
   sdk: ^3.0.6
