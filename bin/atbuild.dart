@@ -102,9 +102,9 @@ Future<void> updateProjectFiles(
   String buildName,
   int buildNumber,
 ) async {
-  if (platform == 'ios') {
-    await iOSUpdatePlist(buildName, buildNumber);
-  }
+  // if (platform == 'ios') {
+  //   await iOSUpdatePlist(buildName, buildNumber);
+  // }
 
   await updateYaml(buildName, buildNumber);
 }
