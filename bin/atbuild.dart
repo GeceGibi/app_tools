@@ -15,22 +15,6 @@ const template = [
 
 String upgradeVersionName(String versionName, {String? type}) {
   return versionName;
-
-  // final segments = versionName.split('.').map(int.parse).toList();
-
-  // ///
-  // switch (type) {
-  //   case 'major':
-  //     segments[0] = ++segments[0];
-
-  //   case 'minor':
-  //     segments[1] = ++segments[1];
-
-  //   default:
-  //     segments[segments.length - 1] = ++segments[segments.length - 1];
-  // }
-
-  // return segments.join('.');
 }
 
 void readEnvFile(File file) {
@@ -95,68 +79,6 @@ void updateEnvFile(File file) {
   );
 
   return (versionName, versionNumber);
-}
-
-Future<void> updateProjectFiles(
-  String platform,
-  String buildName,
-  int buildNumber,
-) async {
-  // if (platform == 'ios') {
-  //   await iOSUpdatePlist(buildName, buildNumber);
-  // }
-
-  await updateYaml(buildName, buildNumber);
-}
-
-Future<void> updateYaml(String buildName, int buildNumber) async {
-  final pubspecFile = File('$cwd/pubspec.yaml');
-
-  if (!pubspecFile.existsSync()) {
-    Printer.warning('pubspec.yaml file not found on ${pubspecFile.path}');
-    return;
-  }
-
-  final pubspecLines = await pubspecFile.readAsLines();
-
-  await pubspecFile.writeAsString(
-    pubspecLines
-        .map((line) {
-          if (line.startsWith('version:')) {
-            return 'version: $buildName+$buildNumber';
-          }
-
-          return line;
-        })
-        .join('\n')
-        .trim(),
-  );
-}
-
-Future<void> iOSUpdatePlist(String buildName, int buildNumber) async {
-  final pListFile = File('$cwd/ios/Runner/Info.plist');
-
-  if (!pListFile.existsSync()) {
-    Printer.warning('Info.plist file not found on ${pListFile.path}');
-    return;
-  }
-
-  final pListLines = await pListFile.readAsLines();
-  final pattern = RegExp(r'\t');
-
-  for (var i = 0; i < pListLines.length; i++) {
-    final line = pListLines[i];
-
-    if (line.contains('CFBundleShortVersionString')) {
-      final indent = '\t' * pattern.allMatches(line).length;
-      pListLines[i + 1] = '$indent<string>$buildName</string>';
-    } else if (line.contains('CFBundleVersion')) {
-      final indent = '\t' * pattern.allMatches(line).length;
-      pListLines[i + 1] = '$indent<string>$buildNumber</string>';
-    }
-  }
-
-  await pListFile.writeAsString(pListLines.join('\n').trim());
 }
 
 void main(List<String> args) async {
@@ -246,9 +168,6 @@ void main(List<String> args) async {
   Printer.info('Working Directory: $cwd');
   Printer.info('*' * 60);
   Printer.write('');
-
-  /// Update Project Files
-  await updateProjectFiles(platform, buildName, buildNumber);
 
   /// Commands
   final works = <Work>[
