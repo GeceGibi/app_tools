@@ -48,6 +48,30 @@ void updateEnvFile(File file) {
   file.writeAsStringSync(lines.join('\n'));
 }
 
+Future<void> updateYaml(String buildName, int buildNumber) async {
+  final pubspecFile = File('$cwd/pubspec.yaml');
+
+  if (!pubspecFile.existsSync()) {
+    Printer.warning('pubspec.yaml file not found on ${pubspecFile.path}');
+    return;
+  }
+
+  final pubspecLines = await pubspecFile.readAsLines();
+
+  await pubspecFile.writeAsString(
+    pubspecLines
+        .map((line) {
+          if (line.startsWith('version:')) {
+            return 'version: $buildName+$buildNumber';
+          }
+
+          return line;
+        })
+        .join('\n')
+        .trim(),
+  );
+}
+
 (String, int) generateVersion(String platform, {String? type}) {
   final now = DateTime.now();
 
@@ -168,6 +192,8 @@ void main(List<String> args) async {
   Printer.info('Working Directory: $cwd');
   Printer.info('*' * 60);
   Printer.write('');
+
+  await updateYaml(buildName, buildNumber);
 
   /// Commands
   final works = <Work>[
