@@ -5,7 +5,7 @@ import 'package:app_tools/worker.dart';
 import 'package:args/args.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
-final cwd = Directory.current.path;
+final String cwd = Directory.current.path;
 final versions = <String, Version>{};
 const template = [
   'google=1.0.0+1|1yyMMddHH+',
@@ -13,12 +13,25 @@ const template = [
   'ios=1.0.0+1|1yyMMddHH+',
 ];
 
+const defaultPattern = 'yymmdd';
+
 String upgradeVersionName(String versionName, {String? type}) {
+  // TODO: Implement version name upgrade logic
   return versionName;
 }
 
 void readEnvFile(File file) {
+  if (!file.existsSync()) {
+    Printer.warning('Version file not found: ${file.path}');
+    return;
+  }
+
   for (final line in file.readAsLinesSync()) {
+    // Skip empty lines and comments
+    if (line.trim().isEmpty || line.trim().startsWith('#')) {
+      continue;
+    }
+
     final platformSplit = line.split('=');
     final patternSplit = platformSplit.last.split('|');
     final versionSplit = patternSplit.first.split('+');
@@ -32,8 +45,9 @@ void readEnvFile(File file) {
         platformSplit.first: Version(
           buildName: versionSplit.first,
           buildNumber: int.parse(versionSplit.last),
-          buildNumberPattern:
-              patternSplit.length > 1 ? patternSplit.last : null,
+          buildNumberPattern: patternSplit.length > 1
+              ? patternSplit.last
+              : null,
         ),
       },
     );
@@ -73,6 +87,10 @@ Future<void> updateYaml(String buildName, int buildNumber) async {
 }
 
 (String, int) generateVersion(String platform, {String? type}) {
+  if (!versions.containsKey(platform)) {
+    throw Exception('Platform "$platform" not found in version file');
+  }
+
   final now = DateTime.now();
 
   final Version(
@@ -81,7 +99,7 @@ Future<void> updateYaml(String buildName, int buildNumber) async {
     :buildNumberPattern,
   ) = versions[platform]!;
 
-  var pattern = buildNumberPattern ?? 'yymmdd';
+  var pattern = buildNumberPattern ?? defaultPattern;
   final autoIncrease = pattern.contains('+');
 
   if (autoIncrease) {
@@ -181,7 +199,10 @@ void main(List<String> args) async {
   final (
     buildName,
     buildNumber,
-  ) = generateVersion(platform, type: versionType);
+  ) = generateVersion(
+    platform,
+    type: versionType,
+  );
 
   Printer.write('');
   Printer.info('*' * 60);
@@ -217,7 +238,8 @@ void main(List<String> args) async {
           switch (platform) {
             'ios' => 'ipa',
             'google' => 'appbundle',
-            'huawei' || _ => 'apk',
+            'huawei' => 'apk',
+            _ => 'apk',
           },
 
           /// Flavor
@@ -230,7 +252,7 @@ void main(List<String> args) async {
           ],
 
           /// version
-          '--build-number=$buildName',
+          '--build-name=$buildName',
           '--build-number=$buildNumber',
         ],
       ),

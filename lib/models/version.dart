@@ -4,7 +4,7 @@ part 'version.g.dart';
 part 'version.freezed.dart';
 
 @freezed
-class Version with _$Version {
+abstract class Version with _$Version {
   const factory Version({
     @JsonKey(name: 'build_name') required String buildName,
     @JsonKey(name: 'build_number') required int buildNumber,
