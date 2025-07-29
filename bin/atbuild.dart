@@ -160,7 +160,8 @@ void main(List<String> args) async {
     ..addFlag('build', abbr: 'b')
     ..addFlag('verbose')
     ..addFlag('init')
-    ..addFlag('help');
+    ..addFlag('help')
+    ..addFlag('no-codesign', abbr: 's');
 
   final arguments = parser.parse(args);
 
@@ -254,6 +255,9 @@ void main(List<String> args) async {
           /// version
           '--build-name=$buildName',
           '--build-number=$buildNumber',
+
+          /// Code Sign
+          if (arguments.flag('no-codesign')) '--no-codesign',
         ],
       ),
 
