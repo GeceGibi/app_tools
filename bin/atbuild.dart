@@ -144,16 +144,6 @@ void main(List<String> args) async {
     )
     ..addOption('flavor', abbr: 'f')
     ..addOption('version-type', abbr: 't', defaultsTo: 'version')
-    ..addFlag(
-      'deploy',
-      abbr: 'd',
-      help: [
-        'Deploy to specified platform store.',
-        'ios => AppStore',
-        'google => PlayConsole',
-        'huawei => AppGallery',
-      ].join('\n'),
-    )
     ..addFlag('production')
     ..addFlag('clean', abbr: 'c')
     ..addFlag('obfuscate', abbr: 'o', defaultsTo: true)
@@ -210,12 +200,18 @@ void main(List<String> args) async {
   Printer.info('Platform: $platform');
   Printer.info('Build Name: $buildName');
   Printer.info('Build Number: $buildNumber');
-  Printer.info('Deploy to Production: ${arguments.flag('production')}');
   Printer.info('Working Directory: $cwd');
   Printer.info('*' * 60);
   Printer.write('');
 
   await updateYaml(buildName, buildNumber);
+
+  final packageType = switch (platform) {
+    'ios' => 'ipa',
+    'google' => 'appbundle',
+    'huawei' => 'apk',
+    _ => 'apk',
+  };
 
   /// Commands
   final works = <Work>[
@@ -235,13 +231,8 @@ void main(List<String> args) async {
         arguments: [
           'build',
 
-          /// Build type
-          switch (platform) {
-            'ios' => 'ipa',
-            'google' => 'appbundle',
-            'huawei' => 'apk',
-            _ => 'apk',
-          },
+          /// Package
+          packageType,
 
           /// Flavor
           if (flavor != null) ...['--flavor', flavor],
@@ -258,26 +249,10 @@ void main(List<String> args) async {
 
           /// Code Sign
           if (arguments.flag('no-codesign')) '--no-codesign',
-        ],
-      ),
 
-    /// Deploy
-    if (arguments.flag('deploy'))
-      Work(
-        description: 'Deploying for platform $platform',
-        command: 'bundle',
-        arguments: [
-          'exec',
-          'fastlane',
-          platform,
-          'deploy',
-          'build_name:$buildName',
-          'build_number:$buildNumber',
-          'production:${arguments.flag('production')}',
+          /// Verbose
+          if (arguments.flag('verbose')) '--verbose',
         ],
-        onComplete: (statusCode) {
-          versions[platform] = versions[platform]!;
-        },
       ),
   ];
 
