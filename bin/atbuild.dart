@@ -137,11 +137,8 @@ void main(List<String> args) async {
         'huawei': 'Build (*.apk) file',
       },
     )
-    ..addOption(
-      'file',
-      help: '.versions.env path',
-      defaultsTo: '.versions.env',
-    )
+    ..addOption('file', help: '.versions.env path', defaultsTo: '.versions.env')
+    ..addOption('export-options-plist', help: 'Export options plist path')
     ..addOption('flavor', abbr: 'f')
     ..addOption('version-type', abbr: 't', defaultsTo: 'version')
     ..addFlag('production')
@@ -252,6 +249,13 @@ void main(List<String> args) async {
 
           /// Verbose
           if (arguments.flag('verbose')) '--verbose',
+
+          /// Export options plist
+          if (arguments.option('export-options-plist') != null)
+            ...[
+              '--export-options-plist',
+              arguments.option('export-options-plist')!,
+            ],
         ],
       ),
   ];
