@@ -21,5 +21,5 @@ Map<String, dynamic> _$VersionToJson(_Version instance) => <String, dynamic>{
   'versionCode': instance.versionCode,
   'versionCodeFormat': instance.versionCodeFormat,
   'arguments': instance.arguments,
-  'package': instance.package,
+  'package': ?instance.package,
 };

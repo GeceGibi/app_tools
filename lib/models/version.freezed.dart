@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Version {
 
- String get versionName; int get versionCode; String get versionCodeFormat; List<String> get arguments; String? get package;
+ String get versionName; int get versionCode; String get versionCodeFormat; List<String> get arguments;@JsonKey(includeIfNull: false) String? get package;
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $VersionCopyWith<$Res>  {
   factory $VersionCopyWith(Version value, $Res Function(Version) _then) = _$VersionCopyWithImpl;
 @useResult
 $Res call({
- String versionName, int versionCode, String versionCodeFormat, List<String> arguments, String? package
+ String versionName, int versionCode, String versionCodeFormat, List<String> arguments,@JsonKey(includeIfNull: false) String? package
 });
 
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String versionCodeFormat,  List<String> arguments,  String? package)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String versionCodeFormat,  List<String> arguments, @JsonKey(includeIfNull: false)  String? package)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
 return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.arguments,_that.package);case _:
@@ -178,7 +178,7 @@ return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String versionCodeFormat,  List<String> arguments,  String? package)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String versionCodeFormat,  List<String> arguments, @JsonKey(includeIfNull: false)  String? package)  $default,) {final _that = this;
 switch (_that) {
 case _Version():
 return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.arguments,_that.package);case _:
@@ -198,7 +198,7 @@ return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String versionName,  int versionCode,  String versionCodeFormat,  List<String> arguments,  String? package)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String versionName,  int versionCode,  String versionCodeFormat,  List<String> arguments, @JsonKey(includeIfNull: false)  String? package)?  $default,) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
 return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.arguments,_that.package);case _:
@@ -213,7 +213,7 @@ return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat,_tha
 @JsonSerializable()
 
 class _Version extends Version {
-  const _Version({this.versionName = '0.0.1', this.versionCode = 0, this.versionCodeFormat = 'yymmdd+', final  List<String> arguments = const [], this.package}): _arguments = arguments,super._();
+  const _Version({this.versionName = '0.0.1', this.versionCode = 0, this.versionCodeFormat = 'yymmdd+', final  List<String> arguments = const [], @JsonKey(includeIfNull: false) this.package}): _arguments = arguments,super._();
   factory _Version.fromJson(Map<String, dynamic> json) => _$VersionFromJson(json);
 
 @override@JsonKey() final  String versionName;
@@ -226,7 +226,7 @@ class _Version extends Version {
   return EqualUnmodifiableListView(_arguments);
 }
 
-@override final  String? package;
+@override@JsonKey(includeIfNull: false) final  String? package;
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
@@ -261,7 +261,7 @@ abstract mixin class _$VersionCopyWith<$Res> implements $VersionCopyWith<$Res> {
   factory _$VersionCopyWith(_Version value, $Res Function(_Version) _then) = __$VersionCopyWithImpl;
 @override @useResult
 $Res call({
- String versionName, int versionCode, String versionCodeFormat, List<String> arguments, String? package
+ String versionName, int versionCode, String versionCodeFormat, List<String> arguments,@JsonKey(includeIfNull: false) String? package
 });
 
 

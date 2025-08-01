@@ -10,7 +10,7 @@ abstract class Version with _$Version {
     @Default(0) int versionCode,
     @Default('yymmdd+') String versionCodeFormat,
     @Default([]) List<String> arguments,
-    String? package,
+    @JsonKey(includeIfNull: false) String? package,
   }) = _Version;
 
   const Version._();

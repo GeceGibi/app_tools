@@ -127,7 +127,7 @@ void initVersionFile() {
   }
 
   const version = Version();
-  final platforms = ['google', 'web', 'ios', 'macos', 'windows', 'linux'];
+  final platforms = ['android', 'web', 'ios', 'macos', 'windows', 'linux'];
 
   final availablePlatforms = platforms.where((platform) {
     return Directory(platform).existsSync();
@@ -218,8 +218,7 @@ void main(List<String> args) async {
       version.package ??
       switch (platform) {
         'ios' => 'ipa',
-        'google' => 'appbundle',
-        'huawei' => 'apk',
+        'android' => 'appbundle',
         _ => 'apk',
       };
 
