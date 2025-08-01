@@ -211,8 +211,10 @@ void main(List<String> args) async {
 
   await updateYaml(version.versionName, version.versionCode);
 
- 
-    
+  if (version.buildBeforeCommand != null) {
+    final [executable, ...arguments] = version.buildBeforeCommand!;
+    await Process.run(executable, arguments);
+  }
 
   /// Commands
   final works = <Work>[
@@ -252,7 +254,7 @@ void main(List<String> args) async {
           if (arguments.flag('verbose')) '--verbose',
 
           /// Platform Arguments
-          ...version.arguments,
+          ...?version.arguments,
         ],
       ),
   ];
@@ -263,4 +265,9 @@ void main(List<String> args) async {
   }
 
   updateConfigFile(versionFile);
+
+  if (version.buildAfterCommand != null) {
+    final [executable, ...arguments] = version.buildAfterCommand!;
+    await Process.run(executable, arguments);
+  }
 }

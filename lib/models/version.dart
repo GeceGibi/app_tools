@@ -10,7 +10,16 @@ abstract class Version with _$Version {
     @Default('0.0.1') String versionName,
     @Default(0) int versionCode,
     @Default('1yyMMdd+') String versionCodeFormat,
-    @Default([]) List<String> arguments,
+
+
+    @JsonKey(includeIfNull: false)
+    List<String>? arguments,
+
+    @JsonKey(includeIfNull: false)
+    List<String>? buildAfterCommand,
+
+    @JsonKey(includeIfNull: false)
+    List<String>? buildBeforeCommand,
   }) = _Version;
 
   const Version._();
