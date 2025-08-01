@@ -212,12 +212,14 @@ void main(List<String> args) async {
   await updateYaml(version.versionName, version.versionCode);
 
   if (version.beforeCommand != null) {
-    final [executable, ...arguments] = version.beforeCommand!;
-    await Process.start(
-      executable,
-      arguments,
-      workingDirectory: version.beforeCommandPwd ?? cwd,
-    );
+    final [command, ...arguments] = version.beforeCommand!;
+
+    await Work(
+      description: 'Running before command.',
+      command: command,
+      arguments: arguments,
+      pwd: version.beforeCommandPwd,
+    ).run();
   }
 
   /// Commands
@@ -271,11 +273,13 @@ void main(List<String> args) async {
   updateConfigFile(versionFile);
 
   if (version.afterCommand != null) {
-    final [executable, ...arguments] = version.afterCommand!;
-    await Process.start(
-      executable,
-      arguments,
-      workingDirectory: version.afterCommandPwd ?? cwd,
-    );
+    final [command, ...arguments] = version.afterCommand!;
+
+    await Work(
+      description: 'Running after command.',
+      command: command,
+      arguments: arguments,
+      pwd: version.afterCommandPwd,
+    ).run();
   }
 }
