@@ -22,6 +22,10 @@ class Work {
     Printer.warning('┌⏺ $description');
     Printer.info('├❯ Running: $command ${arguments.join(" ")}');
 
+    if (pwd != null) {
+      Printer.info('├❯ Working Directory: $pwd');
+    }
+
     final process = await Process.start(
       command,
       arguments,
