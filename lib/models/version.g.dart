@@ -14,14 +14,10 @@ _Version _$VersionFromJson(Map<String, dynamic> json) => _Version(
   buildArguments: (json['buildArguments'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  afterCommand: (json['afterCommand'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
-  afterCommandPwd: json['afterCommandPwd'] as String?,
-  beforeCommand: (json['beforeCommand'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
-  beforeCommandPwd: json['beforeCommandPwd'] as String?,
+  runAfter: json['runAfter'] as String?,
+  runAfterPwd: json['runAfterPwd'] as String?,
+  runBefore: json['runBefore'] as String?,
+  runBeforePwd: json['runBeforePwd'] as String?,
 );
 
 Map<String, dynamic> _$VersionToJson(_Version instance) => <String, dynamic>{
@@ -30,8 +26,8 @@ Map<String, dynamic> _$VersionToJson(_Version instance) => <String, dynamic>{
   'versionCode': instance.versionCode,
   'versionCodeFormat': instance.versionCodeFormat,
   'buildArguments': ?instance.buildArguments,
-  'afterCommand': ?instance.afterCommand,
-  'afterCommandPwd': ?instance.afterCommandPwd,
-  'beforeCommand': ?instance.beforeCommand,
-  'beforeCommandPwd': ?instance.beforeCommandPwd,
+  'runAfter': ?instance.runAfter,
+  'runAfterPwd': ?instance.runAfterPwd,
+  'runBefore': ?instance.runBefore,
+  'runBeforePwd': ?instance.runBeforePwd,
 };

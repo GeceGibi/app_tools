@@ -211,14 +211,14 @@ void main(List<String> args) async {
 
   await updateYaml(version.versionName, version.versionCode);
 
-  if (version.beforeCommand != null) {
-    final [command, ...arguments] = version.beforeCommand!;
+  if (version.runBefore != null) {
+    final [command, ...arguments] = version.runBefore!.split(' ');
 
     await Work(
       description: 'Running before command.',
       command: command,
       arguments: arguments,
-      pwd: version.beforeCommandPwd,
+      pwd: version.runBeforePwd,
     ).run();
   }
 
@@ -272,14 +272,14 @@ void main(List<String> args) async {
 
   updateConfigFile(versionFile);
 
-  if (version.afterCommand != null) {
-    final [command, ...arguments] = version.afterCommand!;
+  if (version.runAfter != null) {
+    final [command, ...arguments] = version.runAfter!.split(' ');
 
     await Work(
       description: 'Running after command.',
       command: command,
       arguments: arguments,
-      pwd: version.afterCommandPwd,
+      pwd: version.runAfterPwd,
     ).run();
   }
 }

@@ -15,10 +15,11 @@ abstract class Version with _$Version {
     @JsonKey(includeIfNull: false) List<String>? buildArguments,
 
     /// Build Before-After Commands
-    @JsonKey(includeIfNull: false) List<String>? afterCommand,
-    @JsonKey(includeIfNull: false) String? afterCommandPwd,
-    @JsonKey(includeIfNull: false) List<String>? beforeCommand,
-    @JsonKey(includeIfNull: false) String? beforeCommandPwd,
+    @JsonKey(includeIfNull: false) String? runAfter,
+    @JsonKey(includeIfNull: false) String? runAfterPwd,
+    
+    @JsonKey(includeIfNull: false) String? runBefore,
+    @JsonKey(includeIfNull: false) String? runBeforePwd,
   }) = _Version;
 
   const Version._();

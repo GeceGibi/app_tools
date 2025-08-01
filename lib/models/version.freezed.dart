@@ -17,7 +17,7 @@ mixin _$Version {
 
  String get package; String get versionName; int get versionCode; String get versionCodeFormat;/// Build Arguments
 @JsonKey(includeIfNull: false) List<String>? get buildArguments;/// Build Before-After Commands
-@JsonKey(includeIfNull: false) List<String>? get afterCommand;@JsonKey(includeIfNull: false) String? get afterCommandPwd;@JsonKey(includeIfNull: false) List<String>? get beforeCommand;@JsonKey(includeIfNull: false) String? get beforeCommandPwd;
+@JsonKey(includeIfNull: false) String? get runAfter;@JsonKey(includeIfNull: false) String? get runAfterPwd;@JsonKey(includeIfNull: false) String? get runBefore;@JsonKey(includeIfNull: false) String? get runBeforePwd;
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +30,16 @@ $VersionCopyWith<Version> get copyWith => _$VersionCopyWithImpl<Version>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Version&&(identical(other.package, package) || other.package == package)&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.versionCodeFormat, versionCodeFormat) || other.versionCodeFormat == versionCodeFormat)&&const DeepCollectionEquality().equals(other.buildArguments, buildArguments)&&const DeepCollectionEquality().equals(other.afterCommand, afterCommand)&&(identical(other.afterCommandPwd, afterCommandPwd) || other.afterCommandPwd == afterCommandPwd)&&const DeepCollectionEquality().equals(other.beforeCommand, beforeCommand)&&(identical(other.beforeCommandPwd, beforeCommandPwd) || other.beforeCommandPwd == beforeCommandPwd));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Version&&(identical(other.package, package) || other.package == package)&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.versionCodeFormat, versionCodeFormat) || other.versionCodeFormat == versionCodeFormat)&&const DeepCollectionEquality().equals(other.buildArguments, buildArguments)&&(identical(other.runAfter, runAfter) || other.runAfter == runAfter)&&(identical(other.runAfterPwd, runAfterPwd) || other.runAfterPwd == runAfterPwd)&&(identical(other.runBefore, runBefore) || other.runBefore == runBefore)&&(identical(other.runBeforePwd, runBeforePwd) || other.runBeforePwd == runBeforePwd));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,package,versionName,versionCode,versionCodeFormat,const DeepCollectionEquality().hash(buildArguments),const DeepCollectionEquality().hash(afterCommand),afterCommandPwd,const DeepCollectionEquality().hash(beforeCommand),beforeCommandPwd);
+int get hashCode => Object.hash(runtimeType,package,versionName,versionCode,versionCodeFormat,const DeepCollectionEquality().hash(buildArguments),runAfter,runAfterPwd,runBefore,runBeforePwd);
 
 @override
 String toString() {
-  return 'Version(package: $package, versionName: $versionName, versionCode: $versionCode, versionCodeFormat: $versionCodeFormat, buildArguments: $buildArguments, afterCommand: $afterCommand, afterCommandPwd: $afterCommandPwd, beforeCommand: $beforeCommand, beforeCommandPwd: $beforeCommandPwd)';
+  return 'Version(package: $package, versionName: $versionName, versionCode: $versionCode, versionCodeFormat: $versionCodeFormat, buildArguments: $buildArguments, runAfter: $runAfter, runAfterPwd: $runAfterPwd, runBefore: $runBefore, runBeforePwd: $runBeforePwd)';
 }
 
 
@@ -50,7 +50,7 @@ abstract mixin class $VersionCopyWith<$Res>  {
   factory $VersionCopyWith(Version value, $Res Function(Version) _then) = _$VersionCopyWithImpl;
 @useResult
 $Res call({
- String package, String versionName, int versionCode, String versionCodeFormat,@JsonKey(includeIfNull: false) List<String>? buildArguments,@JsonKey(includeIfNull: false) List<String>? afterCommand,@JsonKey(includeIfNull: false) String? afterCommandPwd,@JsonKey(includeIfNull: false) List<String>? beforeCommand,@JsonKey(includeIfNull: false) String? beforeCommandPwd
+ String package, String versionName, int versionCode, String versionCodeFormat,@JsonKey(includeIfNull: false) List<String>? buildArguments,@JsonKey(includeIfNull: false) String? runAfter,@JsonKey(includeIfNull: false) String? runAfterPwd,@JsonKey(includeIfNull: false) String? runBefore,@JsonKey(includeIfNull: false) String? runBeforePwd
 });
 
 
@@ -67,17 +67,17 @@ class _$VersionCopyWithImpl<$Res>
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? package = null,Object? versionName = null,Object? versionCode = null,Object? versionCodeFormat = null,Object? buildArguments = freezed,Object? afterCommand = freezed,Object? afterCommandPwd = freezed,Object? beforeCommand = freezed,Object? beforeCommandPwd = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? package = null,Object? versionName = null,Object? versionCode = null,Object? versionCodeFormat = null,Object? buildArguments = freezed,Object? runAfter = freezed,Object? runAfterPwd = freezed,Object? runBefore = freezed,Object? runBeforePwd = freezed,}) {
   return _then(_self.copyWith(
 package: null == package ? _self.package : package // ignore: cast_nullable_to_non_nullable
 as String,versionName: null == versionName ? _self.versionName : versionName // ignore: cast_nullable_to_non_nullable
 as String,versionCode: null == versionCode ? _self.versionCode : versionCode // ignore: cast_nullable_to_non_nullable
 as int,versionCodeFormat: null == versionCodeFormat ? _self.versionCodeFormat : versionCodeFormat // ignore: cast_nullable_to_non_nullable
 as String,buildArguments: freezed == buildArguments ? _self.buildArguments : buildArguments // ignore: cast_nullable_to_non_nullable
-as List<String>?,afterCommand: freezed == afterCommand ? _self.afterCommand : afterCommand // ignore: cast_nullable_to_non_nullable
-as List<String>?,afterCommandPwd: freezed == afterCommandPwd ? _self.afterCommandPwd : afterCommandPwd // ignore: cast_nullable_to_non_nullable
-as String?,beforeCommand: freezed == beforeCommand ? _self.beforeCommand : beforeCommand // ignore: cast_nullable_to_non_nullable
-as List<String>?,beforeCommandPwd: freezed == beforeCommandPwd ? _self.beforeCommandPwd : beforeCommandPwd // ignore: cast_nullable_to_non_nullable
+as List<String>?,runAfter: freezed == runAfter ? _self.runAfter : runAfter // ignore: cast_nullable_to_non_nullable
+as String?,runAfterPwd: freezed == runAfterPwd ? _self.runAfterPwd : runAfterPwd // ignore: cast_nullable_to_non_nullable
+as String?,runBefore: freezed == runBefore ? _self.runBefore : runBefore // ignore: cast_nullable_to_non_nullable
+as String?,runBeforePwd: freezed == runBeforePwd ? _self.runBeforePwd : runBeforePwd // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -163,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String package,  String versionName,  int versionCode,  String versionCodeFormat, @JsonKey(includeIfNull: false)  List<String>? buildArguments, @JsonKey(includeIfNull: false)  List<String>? afterCommand, @JsonKey(includeIfNull: false)  String? afterCommandPwd, @JsonKey(includeIfNull: false)  List<String>? beforeCommand, @JsonKey(includeIfNull: false)  String? beforeCommandPwd)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String package,  String versionName,  int versionCode,  String versionCodeFormat, @JsonKey(includeIfNull: false)  List<String>? buildArguments, @JsonKey(includeIfNull: false)  String? runAfter, @JsonKey(includeIfNull: false)  String? runAfterPwd, @JsonKey(includeIfNull: false)  String? runBefore, @JsonKey(includeIfNull: false)  String? runBeforePwd)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
-return $default(_that.package,_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.buildArguments,_that.afterCommand,_that.afterCommandPwd,_that.beforeCommand,_that.beforeCommandPwd);case _:
+return $default(_that.package,_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.buildArguments,_that.runAfter,_that.runAfterPwd,_that.runBefore,_that.runBeforePwd);case _:
   return orElse();
 
 }
@@ -184,10 +184,10 @@ return $default(_that.package,_that.versionName,_that.versionCode,_that.versionC
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String package,  String versionName,  int versionCode,  String versionCodeFormat, @JsonKey(includeIfNull: false)  List<String>? buildArguments, @JsonKey(includeIfNull: false)  List<String>? afterCommand, @JsonKey(includeIfNull: false)  String? afterCommandPwd, @JsonKey(includeIfNull: false)  List<String>? beforeCommand, @JsonKey(includeIfNull: false)  String? beforeCommandPwd)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String package,  String versionName,  int versionCode,  String versionCodeFormat, @JsonKey(includeIfNull: false)  List<String>? buildArguments, @JsonKey(includeIfNull: false)  String? runAfter, @JsonKey(includeIfNull: false)  String? runAfterPwd, @JsonKey(includeIfNull: false)  String? runBefore, @JsonKey(includeIfNull: false)  String? runBeforePwd)  $default,) {final _that = this;
 switch (_that) {
 case _Version():
-return $default(_that.package,_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.buildArguments,_that.afterCommand,_that.afterCommandPwd,_that.beforeCommand,_that.beforeCommandPwd);case _:
+return $default(_that.package,_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.buildArguments,_that.runAfter,_that.runAfterPwd,_that.runBefore,_that.runBeforePwd);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -204,10 +204,10 @@ return $default(_that.package,_that.versionName,_that.versionCode,_that.versionC
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String package,  String versionName,  int versionCode,  String versionCodeFormat, @JsonKey(includeIfNull: false)  List<String>? buildArguments, @JsonKey(includeIfNull: false)  List<String>? afterCommand, @JsonKey(includeIfNull: false)  String? afterCommandPwd, @JsonKey(includeIfNull: false)  List<String>? beforeCommand, @JsonKey(includeIfNull: false)  String? beforeCommandPwd)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String package,  String versionName,  int versionCode,  String versionCodeFormat, @JsonKey(includeIfNull: false)  List<String>? buildArguments, @JsonKey(includeIfNull: false)  String? runAfter, @JsonKey(includeIfNull: false)  String? runAfterPwd, @JsonKey(includeIfNull: false)  String? runBefore, @JsonKey(includeIfNull: false)  String? runBeforePwd)?  $default,) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
-return $default(_that.package,_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.buildArguments,_that.afterCommand,_that.afterCommandPwd,_that.beforeCommand,_that.beforeCommandPwd);case _:
+return $default(_that.package,_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.buildArguments,_that.runAfter,_that.runAfterPwd,_that.runBefore,_that.runBeforePwd);case _:
   return null;
 
 }
@@ -219,7 +219,7 @@ return $default(_that.package,_that.versionName,_that.versionCode,_that.versionC
 @JsonSerializable()
 
 class _Version extends Version {
-  const _Version({required this.package, this.versionName = '0.0.1', this.versionCode = 0, this.versionCodeFormat = '1yyMMdd+', @JsonKey(includeIfNull: false) final  List<String>? buildArguments, @JsonKey(includeIfNull: false) final  List<String>? afterCommand, @JsonKey(includeIfNull: false) this.afterCommandPwd, @JsonKey(includeIfNull: false) final  List<String>? beforeCommand, @JsonKey(includeIfNull: false) this.beforeCommandPwd}): _buildArguments = buildArguments,_afterCommand = afterCommand,_beforeCommand = beforeCommand,super._();
+  const _Version({required this.package, this.versionName = '0.0.1', this.versionCode = 0, this.versionCodeFormat = '1yyMMdd+', @JsonKey(includeIfNull: false) final  List<String>? buildArguments, @JsonKey(includeIfNull: false) this.runAfter, @JsonKey(includeIfNull: false) this.runAfterPwd, @JsonKey(includeIfNull: false) this.runBefore, @JsonKey(includeIfNull: false) this.runBeforePwd}): _buildArguments = buildArguments,super._();
   factory _Version.fromJson(Map<String, dynamic> json) => _$VersionFromJson(json);
 
 @override final  String package;
@@ -238,27 +238,10 @@ class _Version extends Version {
 }
 
 /// Build Before-After Commands
- final  List<String>? _afterCommand;
-/// Build Before-After Commands
-@override@JsonKey(includeIfNull: false) List<String>? get afterCommand {
-  final value = _afterCommand;
-  if (value == null) return null;
-  if (_afterCommand is EqualUnmodifiableListView) return _afterCommand;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(value);
-}
-
-@override@JsonKey(includeIfNull: false) final  String? afterCommandPwd;
- final  List<String>? _beforeCommand;
-@override@JsonKey(includeIfNull: false) List<String>? get beforeCommand {
-  final value = _beforeCommand;
-  if (value == null) return null;
-  if (_beforeCommand is EqualUnmodifiableListView) return _beforeCommand;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(value);
-}
-
-@override@JsonKey(includeIfNull: false) final  String? beforeCommandPwd;
+@override@JsonKey(includeIfNull: false) final  String? runAfter;
+@override@JsonKey(includeIfNull: false) final  String? runAfterPwd;
+@override@JsonKey(includeIfNull: false) final  String? runBefore;
+@override@JsonKey(includeIfNull: false) final  String? runBeforePwd;
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
@@ -273,16 +256,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Version&&(identical(other.package, package) || other.package == package)&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.versionCodeFormat, versionCodeFormat) || other.versionCodeFormat == versionCodeFormat)&&const DeepCollectionEquality().equals(other._buildArguments, _buildArguments)&&const DeepCollectionEquality().equals(other._afterCommand, _afterCommand)&&(identical(other.afterCommandPwd, afterCommandPwd) || other.afterCommandPwd == afterCommandPwd)&&const DeepCollectionEquality().equals(other._beforeCommand, _beforeCommand)&&(identical(other.beforeCommandPwd, beforeCommandPwd) || other.beforeCommandPwd == beforeCommandPwd));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Version&&(identical(other.package, package) || other.package == package)&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.versionCodeFormat, versionCodeFormat) || other.versionCodeFormat == versionCodeFormat)&&const DeepCollectionEquality().equals(other._buildArguments, _buildArguments)&&(identical(other.runAfter, runAfter) || other.runAfter == runAfter)&&(identical(other.runAfterPwd, runAfterPwd) || other.runAfterPwd == runAfterPwd)&&(identical(other.runBefore, runBefore) || other.runBefore == runBefore)&&(identical(other.runBeforePwd, runBeforePwd) || other.runBeforePwd == runBeforePwd));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,package,versionName,versionCode,versionCodeFormat,const DeepCollectionEquality().hash(_buildArguments),const DeepCollectionEquality().hash(_afterCommand),afterCommandPwd,const DeepCollectionEquality().hash(_beforeCommand),beforeCommandPwd);
+int get hashCode => Object.hash(runtimeType,package,versionName,versionCode,versionCodeFormat,const DeepCollectionEquality().hash(_buildArguments),runAfter,runAfterPwd,runBefore,runBeforePwd);
 
 @override
 String toString() {
-  return 'Version(package: $package, versionName: $versionName, versionCode: $versionCode, versionCodeFormat: $versionCodeFormat, buildArguments: $buildArguments, afterCommand: $afterCommand, afterCommandPwd: $afterCommandPwd, beforeCommand: $beforeCommand, beforeCommandPwd: $beforeCommandPwd)';
+  return 'Version(package: $package, versionName: $versionName, versionCode: $versionCode, versionCodeFormat: $versionCodeFormat, buildArguments: $buildArguments, runAfter: $runAfter, runAfterPwd: $runAfterPwd, runBefore: $runBefore, runBeforePwd: $runBeforePwd)';
 }
 
 
@@ -293,7 +276,7 @@ abstract mixin class _$VersionCopyWith<$Res> implements $VersionCopyWith<$Res> {
   factory _$VersionCopyWith(_Version value, $Res Function(_Version) _then) = __$VersionCopyWithImpl;
 @override @useResult
 $Res call({
- String package, String versionName, int versionCode, String versionCodeFormat,@JsonKey(includeIfNull: false) List<String>? buildArguments,@JsonKey(includeIfNull: false) List<String>? afterCommand,@JsonKey(includeIfNull: false) String? afterCommandPwd,@JsonKey(includeIfNull: false) List<String>? beforeCommand,@JsonKey(includeIfNull: false) String? beforeCommandPwd
+ String package, String versionName, int versionCode, String versionCodeFormat,@JsonKey(includeIfNull: false) List<String>? buildArguments,@JsonKey(includeIfNull: false) String? runAfter,@JsonKey(includeIfNull: false) String? runAfterPwd,@JsonKey(includeIfNull: false) String? runBefore,@JsonKey(includeIfNull: false) String? runBeforePwd
 });
 
 
@@ -310,17 +293,17 @@ class __$VersionCopyWithImpl<$Res>
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? package = null,Object? versionName = null,Object? versionCode = null,Object? versionCodeFormat = null,Object? buildArguments = freezed,Object? afterCommand = freezed,Object? afterCommandPwd = freezed,Object? beforeCommand = freezed,Object? beforeCommandPwd = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? package = null,Object? versionName = null,Object? versionCode = null,Object? versionCodeFormat = null,Object? buildArguments = freezed,Object? runAfter = freezed,Object? runAfterPwd = freezed,Object? runBefore = freezed,Object? runBeforePwd = freezed,}) {
   return _then(_Version(
 package: null == package ? _self.package : package // ignore: cast_nullable_to_non_nullable
 as String,versionName: null == versionName ? _self.versionName : versionName // ignore: cast_nullable_to_non_nullable
 as String,versionCode: null == versionCode ? _self.versionCode : versionCode // ignore: cast_nullable_to_non_nullable
 as int,versionCodeFormat: null == versionCodeFormat ? _self.versionCodeFormat : versionCodeFormat // ignore: cast_nullable_to_non_nullable
 as String,buildArguments: freezed == buildArguments ? _self._buildArguments : buildArguments // ignore: cast_nullable_to_non_nullable
-as List<String>?,afterCommand: freezed == afterCommand ? _self._afterCommand : afterCommand // ignore: cast_nullable_to_non_nullable
-as List<String>?,afterCommandPwd: freezed == afterCommandPwd ? _self.afterCommandPwd : afterCommandPwd // ignore: cast_nullable_to_non_nullable
-as String?,beforeCommand: freezed == beforeCommand ? _self._beforeCommand : beforeCommand // ignore: cast_nullable_to_non_nullable
-as List<String>?,beforeCommandPwd: freezed == beforeCommandPwd ? _self.beforeCommandPwd : beforeCommandPwd // ignore: cast_nullable_to_non_nullable
+as List<String>?,runAfter: freezed == runAfter ? _self.runAfter : runAfter // ignore: cast_nullable_to_non_nullable
+as String?,runAfterPwd: freezed == runAfterPwd ? _self.runAfterPwd : runAfterPwd // ignore: cast_nullable_to_non_nullable
+as String?,runBefore: freezed == runBefore ? _self.runBefore : runBefore // ignore: cast_nullable_to_non_nullable
+as String?,runBeforePwd: freezed == runBeforePwd ? _self.runBeforePwd : runBeforePwd // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
