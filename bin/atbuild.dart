@@ -221,7 +221,7 @@ void main(List<String> args) async {
       command: command,
       arguments: arguments,
       pwd: Work.replaceTemplate(version.runBeforePwd ?? ''),
-    ).run();
+    ).run(verbose: true);
   }
 
   /// Commands
@@ -284,6 +284,6 @@ void main(List<String> args) async {
       command: command,
       arguments: arguments,
       pwd: Work.replaceTemplate(version.runAfterPwd ?? ''),
-    ).run();
+    ).run(verbose: true);
   }
 }
