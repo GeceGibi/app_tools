@@ -267,8 +267,16 @@ void main(List<String> args) async {
       ),
   ];
 
+  var exitCode = 0;
+
   for (final work in works) {
-    await work.run(verbose: arguments.flag('verbose'));
+    exitCode = await work.run(verbose: arguments.flag('verbose'));
+
+    if (exitCode != 0) {
+      Printer.error('Build failed.');
+      return;
+    }
+
     Printer.write('');
   }
 

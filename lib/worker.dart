@@ -32,7 +32,7 @@ class Work {
     );
   }
 
-  Future<void> run({bool verbose = false}) async {
+  Future<int> run({bool verbose = false}) async {
     Printer.warning('┌⏺ $description');
     Printer.info('├❯ Running: $command ${arguments.join(" ")}');
 
@@ -64,5 +64,7 @@ class Work {
     }
 
     onComplete?.call(exitCode);
+
+    return exitCode;
   }
 }
