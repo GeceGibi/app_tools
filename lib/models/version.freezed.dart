@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Version {
 
- String get versionName; int get versionCode; String get versionCodeFormat;
+ String get versionName; int get versionCode; String get versionCodeFormat; List<String> get arguments; String? get package;
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $VersionCopyWith<Version> get copyWith => _$VersionCopyWithImpl<Version>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Version&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.versionCodeFormat, versionCodeFormat) || other.versionCodeFormat == versionCodeFormat));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Version&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.versionCodeFormat, versionCodeFormat) || other.versionCodeFormat == versionCodeFormat)&&const DeepCollectionEquality().equals(other.arguments, arguments)&&(identical(other.package, package) || other.package == package));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,versionName,versionCode,versionCodeFormat);
+int get hashCode => Object.hash(runtimeType,versionName,versionCode,versionCodeFormat,const DeepCollectionEquality().hash(arguments),package);
 
 @override
 String toString() {
-  return 'Version(versionName: $versionName, versionCode: $versionCode, versionCodeFormat: $versionCodeFormat)';
+  return 'Version(versionName: $versionName, versionCode: $versionCode, versionCodeFormat: $versionCodeFormat, arguments: $arguments, package: $package)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $VersionCopyWith<$Res>  {
   factory $VersionCopyWith(Version value, $Res Function(Version) _then) = _$VersionCopyWithImpl;
 @useResult
 $Res call({
- String versionName, int versionCode, String versionCodeFormat
+ String versionName, int versionCode, String versionCodeFormat, List<String> arguments, String? package
 });
 
 
@@ -65,12 +65,14 @@ class _$VersionCopyWithImpl<$Res>
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? versionName = null,Object? versionCode = null,Object? versionCodeFormat = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? versionName = null,Object? versionCode = null,Object? versionCodeFormat = null,Object? arguments = null,Object? package = freezed,}) {
   return _then(_self.copyWith(
 versionName: null == versionName ? _self.versionName : versionName // ignore: cast_nullable_to_non_nullable
 as String,versionCode: null == versionCode ? _self.versionCode : versionCode // ignore: cast_nullable_to_non_nullable
 as int,versionCodeFormat: null == versionCodeFormat ? _self.versionCodeFormat : versionCodeFormat // ignore: cast_nullable_to_non_nullable
-as String,
+as String,arguments: null == arguments ? _self.arguments : arguments // ignore: cast_nullable_to_non_nullable
+as List<String>,package: freezed == package ? _self.package : package // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String versionCodeFormat)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String versionCodeFormat,  List<String> arguments,  String? package)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
-return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat);case _:
+return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.arguments,_that.package);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String versionCodeFormat)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String versionCodeFormat,  List<String> arguments,  String? package)  $default,) {final _that = this;
 switch (_that) {
 case _Version():
-return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat);case _:
+return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.arguments,_that.package);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String versionName,  int versionCode,  String versionCodeFormat)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String versionName,  int versionCode,  String versionCodeFormat,  List<String> arguments,  String? package)?  $default,) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
-return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat);case _:
+return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat,_that.arguments,_that.package);case _:
   return null;
 
 }
@@ -211,12 +213,20 @@ return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat);cas
 @JsonSerializable()
 
 class _Version extends Version {
-  const _Version({this.versionName = '0.0.1', this.versionCode = 0, this.versionCodeFormat = 'yymmdd+'}): super._();
+  const _Version({this.versionName = '0.0.1', this.versionCode = 0, this.versionCodeFormat = 'yymmdd+', final  List<String> arguments = const [], this.package}): _arguments = arguments,super._();
   factory _Version.fromJson(Map<String, dynamic> json) => _$VersionFromJson(json);
 
 @override@JsonKey() final  String versionName;
 @override@JsonKey() final  int versionCode;
 @override@JsonKey() final  String versionCodeFormat;
+ final  List<String> _arguments;
+@override@JsonKey() List<String> get arguments {
+  if (_arguments is EqualUnmodifiableListView) return _arguments;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_arguments);
+}
+
+@override final  String? package;
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Version&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.versionCodeFormat, versionCodeFormat) || other.versionCodeFormat == versionCodeFormat));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Version&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.versionCodeFormat, versionCodeFormat) || other.versionCodeFormat == versionCodeFormat)&&const DeepCollectionEquality().equals(other._arguments, _arguments)&&(identical(other.package, package) || other.package == package));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,versionName,versionCode,versionCodeFormat);
+int get hashCode => Object.hash(runtimeType,versionName,versionCode,versionCodeFormat,const DeepCollectionEquality().hash(_arguments),package);
 
 @override
 String toString() {
-  return 'Version(versionName: $versionName, versionCode: $versionCode, versionCodeFormat: $versionCodeFormat)';
+  return 'Version(versionName: $versionName, versionCode: $versionCode, versionCodeFormat: $versionCodeFormat, arguments: $arguments, package: $package)';
 }
 
 
@@ -251,7 +261,7 @@ abstract mixin class _$VersionCopyWith<$Res> implements $VersionCopyWith<$Res> {
   factory _$VersionCopyWith(_Version value, $Res Function(_Version) _then) = __$VersionCopyWithImpl;
 @override @useResult
 $Res call({
- String versionName, int versionCode, String versionCodeFormat
+ String versionName, int versionCode, String versionCodeFormat, List<String> arguments, String? package
 });
 
 
@@ -268,12 +278,14 @@ class __$VersionCopyWithImpl<$Res>
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? versionName = null,Object? versionCode = null,Object? versionCodeFormat = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? versionName = null,Object? versionCode = null,Object? versionCodeFormat = null,Object? arguments = null,Object? package = freezed,}) {
   return _then(_Version(
 versionName: null == versionName ? _self.versionName : versionName // ignore: cast_nullable_to_non_nullable
 as String,versionCode: null == versionCode ? _self.versionCode : versionCode // ignore: cast_nullable_to_non_nullable
 as int,versionCodeFormat: null == versionCodeFormat ? _self.versionCodeFormat : versionCodeFormat // ignore: cast_nullable_to_non_nullable
-as String,
+as String,arguments: null == arguments ? _self._arguments : arguments // ignore: cast_nullable_to_non_nullable
+as List<String>,package: freezed == package ? _self.package : package // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

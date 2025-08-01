@@ -9,6 +9,8 @@ abstract class Version with _$Version {
     @Default('0.0.1') String versionName,
     @Default(0) int versionCode,
     @Default('yymmdd+') String versionCodeFormat,
+    @Default([]) List<String> arguments,
+    String? package,
   }) = _Version;
 
   const Version._();

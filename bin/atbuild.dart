@@ -91,10 +91,10 @@ String platformKey(String platform, {String? flavor}) {
     return platform;
   }
 
-  return '$platform|$flavor';
+  return '$flavor:$platform';
 }
 
-(String, int) generateVersion(String platform, {String? flavor}) {
+Version generateVersion(String platform, {String? flavor}) {
   final key = platformKey(platform, flavor: flavor);
 
   if (!versions.containsKey(key)) {
@@ -115,7 +115,7 @@ String platformKey(String platform, {String? flavor}) {
     versionCode: versionCode,
   );
 
-  return (versionName, versionCode);
+  return versions[key]!;
 }
 
 void initVersionFile() {
@@ -127,14 +127,17 @@ void initVersionFile() {
   }
 
   const version = Version();
+  final platforms = ['google', 'web', 'ios', 'macos', 'windows', 'linux'];
+
+  final availablePlatforms = platforms.where((platform) {
+    return Directory(platform).existsSync();
+  });
 
   file
     ..createSync(recursive: true)
     ..writeAsStringSync(
       jsonEncoder.convert({
-        'google': version.toJson(),
-        'huawei': version.toJson(),
-        'ios': version.toJson(),
+        for (final platform in availablePlatforms) platform: version.toJson(),
       }),
     );
   return;
@@ -146,12 +149,14 @@ void main(List<String> args) async {
       'platform',
       abbr: 'p',
       help: 'Build runs for which platform',
-      mandatory: false,
       allowed: ['ios', 'google', 'huawei'],
       allowedHelp: {
         'ios': 'Build ipa',
         'google': 'Build App Bundle (*.aab) file',
-        'huawei': 'Build (*.apk) file',
+        'web': 'Build Web',
+        'macos': 'Build Macos',
+        'windows': 'Build Windows',
+        'linux': 'Build Linux',
       },
     )
     ..addOption(
@@ -196,31 +201,27 @@ void main(List<String> args) async {
     throw Exception('Platform is not specified');
   }
 
-  final (
-    buildName,
-    buildNumber,
-  ) = generateVersion(
-    platform,
-    flavor: flavor,
-  );
+  final version = generateVersion(platform, flavor: flavor);
 
   Printer.write('');
   Printer.info('*' * 60);
   Printer.info('Platform: $platform');
-  Printer.info('Build Name: $buildName');
-  Printer.info('Build Number: $buildNumber');
+  Printer.info('Build Name: ${version.versionName}');
+  Printer.info('Build Number: ${version.versionCode}');
   Printer.info('Working Directory: $cwd');
   Printer.info('*' * 60);
   Printer.write('');
 
-  await updateYaml(buildName, buildNumber);
+  await updateYaml(version.versionName, version.versionCode);
 
-  final packageType = switch (platform) {
-    'ios' => 'ipa',
-    'google' => 'appbundle',
-    'huawei' => 'apk',
-    _ => 'apk',
-  };
+  final packageType =
+      version.package ??
+      switch (platform) {
+        'ios' => 'ipa',
+        'google' => 'appbundle',
+        'huawei' => 'apk',
+        _ => 'apk',
+      };
 
   /// Commands
   final works = <Work>[
@@ -253,24 +254,14 @@ void main(List<String> args) async {
           ],
 
           /// version
-          '--build-name=$buildName',
-          '--build-number=$buildNumber',
-
-          /// Code Sign
-          if (arguments.flag('no-codesign')) '--no-codesign',
+          '--build-name=${version.versionName}',
+          '--build-number=${version.versionCode}',
 
           /// Verbose
           if (arguments.flag('verbose')) '--verbose',
 
-          /// Export options plist
-          if (arguments.option('export-options-plist') != null) ...[
-            '--export-options-plist',
-            arguments.option('export-options-plist')!,
-          ],
-
-          /// Pass to flutter
-          // if (arguments.option('pass-to-flutter') != null)
-          //   ...arguments.option('pass-to-flutter')!.split(','),
+          /// Platform Arguments
+          ...version.arguments,
         ],
       ),
   ];
