@@ -211,13 +211,8 @@ void main(List<String> args) async {
 
   await updateYaml(version.versionName, version.versionCode);
 
-  final packageType =
-      version.package ??
-      switch (platform) {
-        'ios' => 'ipa',
-        'android' => 'appbundle',
-        _ => 'apk',
-      };
+ 
+    
 
   /// Commands
   final works = <Work>[
@@ -238,7 +233,7 @@ void main(List<String> args) async {
           'build',
 
           /// Package
-          packageType,
+          version.package,
 
           /// Flavor
           if (flavor != null) ...['--flavor', flavor],
