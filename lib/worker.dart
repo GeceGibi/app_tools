@@ -18,6 +18,20 @@ class Work {
   final List<String> arguments;
   final void Function(int statusCode)? onComplete;
 
+  static String replaceTemplate(String template) {
+    final variables = {
+      'cwd': Directory.current.path,
+    };
+
+    return template.replaceAllMapped(
+      RegExp(r'\{(\w+)\}'),
+      (match) {
+        final key = match.group(1);
+        return variables[key]?.toString() ?? match.group(0)!;
+      },
+    );
+  }
+
   Future<void> run({bool verbose = false}) async {
     Printer.warning('┌⏺ $description');
     Printer.info('├❯ Running: $command ${arguments.join(" ")}');
@@ -26,19 +40,20 @@ class Work {
       Printer.info('├❯ Working Directory: $pwd');
     }
 
-    final process = await Process.start(
-      command,
-      arguments,
-      workingDirectory: pwd,
-    )
-      ..stderr.listen((bytes) => Printer.error(utf8.decode(bytes).trim()))
-      ..stdout.listen((bytes) {
-        if (!verbose) {
-          return;
-        }
+    final process =
+        await Process.start(
+            command,
+            arguments,
+            workingDirectory: pwd,
+          )
+          ..stderr.listen((bytes) => Printer.error(utf8.decode(bytes).trim()))
+          ..stdout.listen((bytes) {
+            if (!verbose) {
+              return;
+            }
 
-        Printer.write(utf8.decode(bytes).trim());
-      });
+            Printer.write(utf8.decode(bytes).trim());
+          });
 
     final exitCode = await process.exitCode;
 
