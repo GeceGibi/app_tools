@@ -8,7 +8,7 @@ abstract class Version with _$Version {
   const factory Version({
     @Default('0.0.1') String versionName,
     @Default(0) int versionCode,
-    @Default('yymmdd+') String versionCodeFormat,
+    @Default('1yyMMdd+') String versionCodeFormat,
     @Default([]) List<String> arguments,
     @JsonKey(includeIfNull: false) String? package,
   }) = _Version;
