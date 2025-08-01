@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:app_tools/models/models.dart';
 import 'package:app_tools/printer.dart';
@@ -5,61 +6,60 @@ import 'package:app_tools/worker.dart';
 import 'package:args/args.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
+const jsonEncoder = JsonEncoder.withIndent('    ');
 final String cwd = Directory.current.path;
 final versions = <String, Version>{};
-const template = [
-  'google=1.0.0+1|1yyMMddHH+',
-  'huawei=1.0.0+1|1yyMMddHH+',
-  'ios=1.0.0+1|1yyMMddHH+',
-];
 
-const defaultPattern = 'yymmdd';
-
-String upgradeVersionName(String versionName, {String? type}) {
+String updateVersionName(String versionName) {
   // TODO: Implement version name upgrade logic
   return versionName;
 }
 
-void readEnvFile(File file) {
+int updateVersionCode(String versionCodeFormat, int prevVersionCode) {
+  final now = DateTime.now();
+
+  var format = versionCodeFormat;
+
+  final increase = format.contains('+');
+
+  if (increase) {
+    format = format.replaceAll('+', '');
+  }
+
+  final dateFormat = DateFormat(format);
+
+  var versionCode = int.parse(dateFormat.format(now));
+
+  if (increase && versionCode <= prevVersionCode) {
+    versionCode = prevVersionCode + 1;
+  }
+
+  return versionCode;
+}
+
+void readConfigFile(File file) {
   if (!file.existsSync()) {
-    Printer.warning('Version file not found: ${file.path}');
+    Printer.warning('Version file not found: ${file.absolute.path}');
     return;
   }
 
-  for (final line in file.readAsLinesSync()) {
-    // Skip empty lines and comments
-    if (line.trim().isEmpty || line.trim().startsWith('#')) {
-      continue;
-    }
+  final configFile = Map<String, Map<String, dynamic>>.from(
+    jsonDecode(file.readAsStringSync()) as Map,
+  );
 
-    final platformSplit = line.split('=');
-    final patternSplit = platformSplit.last.split('|');
-    final versionSplit = patternSplit.first.split('+');
-
-    if (platformSplit.length <= 1) {
-      continue;
-    }
-
-    versions.addAll(
-      {
-        platformSplit.first: Version(
-          buildName: versionSplit.first,
-          buildNumber: int.parse(versionSplit.last),
-          buildNumberPattern: patternSplit.length > 1
-              ? patternSplit.last
-              : null,
-        ),
-      },
-    );
-  }
+  versions.addAll(
+    configFile.map(
+      (key, value) => MapEntry(key, Version.fromJson(value)),
+    ),
+  );
 }
 
-void updateEnvFile(File file) {
-  final lines = [
-    for (final entry in versions.entries) entry.value.toEnvLine(entry.key),
-  ];
-
-  file.writeAsStringSync(lines.join('\n'));
+void updateConfigFile(File file) {
+  file.writeAsStringSync(
+    jsonEncoder.convert(
+      versions.map((key, value) => MapEntry(key, value.toJson())),
+    ),
+  );
 }
 
 Future<void> updateYaml(String buildName, int buildNumber) async {
@@ -86,41 +86,58 @@ Future<void> updateYaml(String buildName, int buildNumber) async {
   );
 }
 
-(String, int) generateVersion(String platform, {String? type}) {
-  if (!versions.containsKey(platform)) {
-    throw Exception('Platform "$platform" not found in version file');
+String platformKey(String platform, {String? flavor}) {
+  if (flavor == null) {
+    return platform;
   }
 
-  final now = DateTime.now();
+  return '$platform|$flavor';
+}
+
+(String, int) generateVersion(String platform, {String? flavor}) {
+  final key = platformKey(platform, flavor: flavor);
+
+  if (!versions.containsKey(key)) {
+    versions[key] = const Version();
+  }
 
   final Version(
-    buildName: prevVersionName,
-    buildNumber: prevVersionNumber,
-    :buildNumberPattern,
-  ) = versions[platform]!;
+    versionName: prevVersionName,
+    versionCode: prevVersionCode,
+    :versionCodeFormat,
+  ) = versions[key]!;
 
-  var pattern = buildNumberPattern ?? defaultPattern;
-  final autoIncrease = pattern.contains('+');
+  final versionName = updateVersionName(prevVersionName);
+  final versionCode = updateVersionCode(versionCodeFormat, prevVersionCode);
 
-  if (autoIncrease) {
-    pattern = pattern.replaceAll('+', '');
-  }
-
-  final dateFormat = DateFormat(pattern);
-
-  final versionName = upgradeVersionName(prevVersionName, type: type);
-  var versionNumber = int.parse(dateFormat.format(now));
-
-  if (autoIncrease && versionNumber <= prevVersionNumber) {
-    versionNumber = prevVersionNumber + 1;
-  }
-
-  versions[platform] = versions[platform]!.copyWith(
-    buildName: versionName,
-    buildNumber: versionNumber,
+  versions[key] = versions[key]!.copyWith(
+    versionName: versionName,
+    versionCode: versionCode,
   );
 
-  return (versionName, versionNumber);
+  return (versionName, versionCode);
+}
+
+void initVersionFile() {
+  final file = File('$cwd/.versions.json');
+
+  if (file.existsSync()) {
+    Printer.warning('Version file already exist.');
+    return;
+  }
+
+  const version = Version();
+
+  file
+    ..createSync(recursive: true)
+    ..writeAsStringSync(
+      jsonEncoder.convert({
+        'google': version.toJson(),
+        'huawei': version.toJson(),
+        'ios': version.toJson(),
+      }),
+    );
+  return;
 }
 
 void main(List<String> args) async {
@@ -129,7 +146,7 @@ void main(List<String> args) async {
       'platform',
       abbr: 'p',
       help: 'Build runs for which platform',
-      mandatory: true,
+      mandatory: false,
       allowed: ['ios', 'google', 'huawei'],
       allowedHelp: {
         'ios': 'Build ipa',
@@ -137,10 +154,15 @@ void main(List<String> args) async {
         'huawei': 'Build (*.apk) file',
       },
     )
-    ..addOption('file', help: '.versions.env path', defaultsTo: '.versions.env')
+    ..addOption(
+      'file',
+      help: '.versions.json path',
+      defaultsTo: '.versions.json',
+    )
     ..addOption('export-options-plist', help: 'Export options plist path')
     ..addOption('flavor', abbr: 'f')
-    ..addOption('version-type', abbr: 't', defaultsTo: 'version')
+    // ..addOption('version-type', abbr: 't', defaultsTo: 'version')
+    // ..addOption('pass-to-flutter', abbr: 'ptf', defaultsTo: '')
     ..addFlag('production')
     ..addFlag('clean', abbr: 'c')
     ..addFlag('obfuscate', abbr: 'o', defaultsTo: true)
@@ -158,26 +180,16 @@ void main(List<String> args) async {
   }
 
   if (arguments.flag('init')) {
-    final file = File('$cwd/.versions.env');
-
-    if (file.existsSync()) {
-      Printer.warning('Version file already exist.');
-      return;
-    }
-
-    file
-      ..createSync(recursive: true)
-      ..writeAsStringSync(template.join('\n'));
+    initVersionFile();
     return;
   }
 
   final versionFile = File(arguments.option('file')!);
 
   /// Read File
-  readEnvFile(versionFile);
+  readConfigFile(versionFile);
 
   final platform = arguments.option('platform');
-  final versionType = arguments.option('version-type');
   final flavor = arguments.option('flavor');
 
   if (platform == null) {
@@ -189,7 +201,7 @@ void main(List<String> args) async {
     buildNumber,
   ) = generateVersion(
     platform,
-    type: versionType,
+    flavor: flavor,
   );
 
   Printer.write('');
@@ -251,11 +263,14 @@ void main(List<String> args) async {
           if (arguments.flag('verbose')) '--verbose',
 
           /// Export options plist
-          if (arguments.option('export-options-plist') != null)
-            ...[
-              '--export-options-plist',
-              arguments.option('export-options-plist')!,
-            ],
+          if (arguments.option('export-options-plist') != null) ...[
+            '--export-options-plist',
+            arguments.option('export-options-plist')!,
+          ],
+
+          /// Pass to flutter
+          // if (arguments.option('pass-to-flutter') != null)
+          //   ...arguments.option('pass-to-flutter')!.split(','),
         ],
       ),
   ];
@@ -265,5 +280,5 @@ void main(List<String> args) async {
     Printer.write('');
   }
 
-  updateEnvFile(versionFile);
+  updateConfigFile(versionFile);
 }

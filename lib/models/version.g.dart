@@ -7,13 +7,13 @@ part of 'version.dart';
 // **************************************************************************
 
 _Version _$VersionFromJson(Map<String, dynamic> json) => _Version(
-  buildName: json['build_name'] as String,
-  buildNumber: (json['build_number'] as num).toInt(),
-  buildNumberPattern: json['build_number_pattern'] as String?,
+  versionName: json['versionName'] as String? ?? '0.0.1',
+  versionCode: (json['versionCode'] as num?)?.toInt() ?? 0,
+  versionCodeFormat: json['versionCodeFormat'] as String? ?? 'yymmdd+',
 );
 
 Map<String, dynamic> _$VersionToJson(_Version instance) => <String, dynamic>{
-  'build_name': instance.buildName,
-  'build_number': instance.buildNumber,
-  'build_number_pattern': instance.buildNumberPattern,
+  'versionName': instance.versionName,
+  'versionCode': instance.versionCode,
+  'versionCodeFormat': instance.versionCodeFormat,
 };

@@ -6,18 +6,13 @@ part 'version.freezed.dart';
 @freezed
 abstract class Version with _$Version {
   const factory Version({
-    @JsonKey(name: 'build_name') required String buildName,
-    @JsonKey(name: 'build_number') required int buildNumber,
-    @JsonKey(name: 'build_number_pattern') String? buildNumberPattern,
+    @Default('0.0.1') String versionName,
+    @Default(0) int versionCode,
+    @Default('yymmdd+') String versionCodeFormat,
   }) = _Version;
 
   const Version._();
 
   factory Version.fromJson(Map<String, dynamic> json) =>
       _$VersionFromJson(json);
-
-  String toEnvLine(String platform) {
-    final pattern = buildNumberPattern != null ? '|$buildNumberPattern' : '';
-    return '$platform=$buildName+$buildNumber$pattern';
-  }
 }

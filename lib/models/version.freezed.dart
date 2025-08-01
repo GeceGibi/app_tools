@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Version {
 
-@JsonKey(name: 'build_name') String get buildName;@JsonKey(name: 'build_number') int get buildNumber;@JsonKey(name: 'build_number_pattern') String? get buildNumberPattern;
+ String get versionName; int get versionCode; String get versionCodeFormat;
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $VersionCopyWith<Version> get copyWith => _$VersionCopyWithImpl<Version>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Version&&(identical(other.buildName, buildName) || other.buildName == buildName)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.buildNumberPattern, buildNumberPattern) || other.buildNumberPattern == buildNumberPattern));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Version&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.versionCodeFormat, versionCodeFormat) || other.versionCodeFormat == versionCodeFormat));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,buildName,buildNumber,buildNumberPattern);
+int get hashCode => Object.hash(runtimeType,versionName,versionCode,versionCodeFormat);
 
 @override
 String toString() {
-  return 'Version(buildName: $buildName, buildNumber: $buildNumber, buildNumberPattern: $buildNumberPattern)';
+  return 'Version(versionName: $versionName, versionCode: $versionCode, versionCodeFormat: $versionCodeFormat)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $VersionCopyWith<$Res>  {
   factory $VersionCopyWith(Version value, $Res Function(Version) _then) = _$VersionCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'build_name') String buildName,@JsonKey(name: 'build_number') int buildNumber,@JsonKey(name: 'build_number_pattern') String? buildNumberPattern
+ String versionName, int versionCode, String versionCodeFormat
 });
 
 
@@ -65,12 +65,12 @@ class _$VersionCopyWithImpl<$Res>
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? buildName = null,Object? buildNumber = null,Object? buildNumberPattern = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? versionName = null,Object? versionCode = null,Object? versionCodeFormat = null,}) {
   return _then(_self.copyWith(
-buildName: null == buildName ? _self.buildName : buildName // ignore: cast_nullable_to_non_nullable
-as String,buildNumber: null == buildNumber ? _self.buildNumber : buildNumber // ignore: cast_nullable_to_non_nullable
-as int,buildNumberPattern: freezed == buildNumberPattern ? _self.buildNumberPattern : buildNumberPattern // ignore: cast_nullable_to_non_nullable
-as String?,
+versionName: null == versionName ? _self.versionName : versionName // ignore: cast_nullable_to_non_nullable
+as String,versionCode: null == versionCode ? _self.versionCode : versionCode // ignore: cast_nullable_to_non_nullable
+as int,versionCodeFormat: null == versionCodeFormat ? _self.versionCodeFormat : versionCodeFormat // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -155,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'build_name')  String buildName, @JsonKey(name: 'build_number')  int buildNumber, @JsonKey(name: 'build_number_pattern')  String? buildNumberPattern)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String versionCodeFormat)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
-return $default(_that.buildName,_that.buildNumber,_that.buildNumberPattern);case _:
+return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat);case _:
   return orElse();
 
 }
@@ -176,10 +176,10 @@ return $default(_that.buildName,_that.buildNumber,_that.buildNumberPattern);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'build_name')  String buildName, @JsonKey(name: 'build_number')  int buildNumber, @JsonKey(name: 'build_number_pattern')  String? buildNumberPattern)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String versionName,  int versionCode,  String versionCodeFormat)  $default,) {final _that = this;
 switch (_that) {
 case _Version():
-return $default(_that.buildName,_that.buildNumber,_that.buildNumberPattern);case _:
+return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +196,10 @@ return $default(_that.buildName,_that.buildNumber,_that.buildNumberPattern);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'build_name')  String buildName, @JsonKey(name: 'build_number')  int buildNumber, @JsonKey(name: 'build_number_pattern')  String? buildNumberPattern)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String versionName,  int versionCode,  String versionCodeFormat)?  $default,) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
-return $default(_that.buildName,_that.buildNumber,_that.buildNumberPattern);case _:
+return $default(_that.versionName,_that.versionCode,_that.versionCodeFormat);case _:
   return null;
 
 }
@@ -211,12 +211,12 @@ return $default(_that.buildName,_that.buildNumber,_that.buildNumberPattern);case
 @JsonSerializable()
 
 class _Version extends Version {
-  const _Version({@JsonKey(name: 'build_name') required this.buildName, @JsonKey(name: 'build_number') required this.buildNumber, @JsonKey(name: 'build_number_pattern') this.buildNumberPattern}): super._();
+  const _Version({this.versionName = '0.0.1', this.versionCode = 0, this.versionCodeFormat = 'yymmdd+'}): super._();
   factory _Version.fromJson(Map<String, dynamic> json) => _$VersionFromJson(json);
 
-@override@JsonKey(name: 'build_name') final  String buildName;
-@override@JsonKey(name: 'build_number') final  int buildNumber;
-@override@JsonKey(name: 'build_number_pattern') final  String? buildNumberPattern;
+@override@JsonKey() final  String versionName;
+@override@JsonKey() final  int versionCode;
+@override@JsonKey() final  String versionCodeFormat;
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Version&&(identical(other.buildName, buildName) || other.buildName == buildName)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.buildNumberPattern, buildNumberPattern) || other.buildNumberPattern == buildNumberPattern));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Version&&(identical(other.versionName, versionName) || other.versionName == versionName)&&(identical(other.versionCode, versionCode) || other.versionCode == versionCode)&&(identical(other.versionCodeFormat, versionCodeFormat) || other.versionCodeFormat == versionCodeFormat));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,buildName,buildNumber,buildNumberPattern);
+int get hashCode => Object.hash(runtimeType,versionName,versionCode,versionCodeFormat);
 
 @override
 String toString() {
-  return 'Version(buildName: $buildName, buildNumber: $buildNumber, buildNumberPattern: $buildNumberPattern)';
+  return 'Version(versionName: $versionName, versionCode: $versionCode, versionCodeFormat: $versionCodeFormat)';
 }
 
 
@@ -251,7 +251,7 @@ abstract mixin class _$VersionCopyWith<$Res> implements $VersionCopyWith<$Res> {
   factory _$VersionCopyWith(_Version value, $Res Function(_Version) _then) = __$VersionCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'build_name') String buildName,@JsonKey(name: 'build_number') int buildNumber,@JsonKey(name: 'build_number_pattern') String? buildNumberPattern
+ String versionName, int versionCode, String versionCodeFormat
 });
 
 
@@ -268,12 +268,12 @@ class __$VersionCopyWithImpl<$Res>
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? buildName = null,Object? buildNumber = null,Object? buildNumberPattern = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? versionName = null,Object? versionCode = null,Object? versionCodeFormat = null,}) {
   return _then(_Version(
-buildName: null == buildName ? _self.buildName : buildName // ignore: cast_nullable_to_non_nullable
-as String,buildNumber: null == buildNumber ? _self.buildNumber : buildNumber // ignore: cast_nullable_to_non_nullable
-as int,buildNumberPattern: freezed == buildNumberPattern ? _self.buildNumberPattern : buildNumberPattern // ignore: cast_nullable_to_non_nullable
-as String?,
+versionName: null == versionName ? _self.versionName : versionName // ignore: cast_nullable_to_non_nullable
+as String,versionCode: null == versionCode ? _self.versionCode : versionCode // ignore: cast_nullable_to_non_nullable
+as int,versionCodeFormat: null == versionCodeFormat ? _self.versionCodeFormat : versionCodeFormat // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
