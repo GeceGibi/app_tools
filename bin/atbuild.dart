@@ -126,18 +126,26 @@ void initVersionFile() {
     return;
   }
 
-  const version = Version();
-  final platforms = ['android', 'web', 'ios', 'macos', 'windows', 'linux'];
+  final platforms = {
+    'android': const Version(package: 'appbundle'),
+    'web': const Version(package: 'web'),
+    'ios': const Version(package: 'ipa'),
+    'macos': const Version(package: 'macos'),
+    'windows': const Version(package: 'windows'),
+    'linux': const Version(package: 'linux'),
+  };
 
-  final availablePlatforms = platforms.where((platform) {
-    return Directory(platform).existsSync();
+  final availablePlatforms = platforms.entries.where((entry) {
+    final MapEntry(:key, :value) = entry;
+    return Directory(key).existsSync();
   });
 
   file
     ..createSync(recursive: true)
     ..writeAsStringSync(
       jsonEncoder.convert({
-        for (final platform in availablePlatforms) platform: version.toJson(),
+        for (final MapEntry(:key, :value) in availablePlatforms)
+          key: value.toJson(),
       }),
     );
   return;
@@ -149,10 +157,10 @@ void main(List<String> args) async {
       'platform',
       abbr: 'p',
       help: 'Build runs for which platform',
-      allowed: ['ios', 'google', 'huawei'],
+      // allowed: ['ios', 'google', 'huawei', 'web', 'macos', 'windows', 'linux'],
       allowedHelp: {
         'ios': 'Build ipa',
-        'google': 'Build App Bundle (*.aab) file',
+        'android': 'Build App Bundle (*.aab) file',
         'web': 'Build Web',
         'macos': 'Build Macos',
         'windows': 'Build Windows',
@@ -166,8 +174,6 @@ void main(List<String> args) async {
     )
     ..addOption('export-options-plist', help: 'Export options plist path')
     ..addOption('flavor', abbr: 'f')
-    // ..addOption('version-type', abbr: 't', defaultsTo: 'version')
-    // ..addOption('pass-to-flutter', abbr: 'ptf', defaultsTo: '')
     ..addFlag('production')
     ..addFlag('clean', abbr: 'c')
     ..addFlag('obfuscate', abbr: 'o', defaultsTo: true)
