@@ -216,12 +216,17 @@ void main(List<String> args) async {
       version.runBefore!,
     ).split(' ');
 
-    await Work(
+    final exitCode = await Work(
       description: 'Running before command.',
       command: command,
       arguments: arguments,
       pwd: Work.replaceTemplate(version.runBeforePwd ?? ''),
     ).run(verbose: true);
+
+    if (exitCode != 0) {
+      Printer.error('Run-Before command failed.');
+      return;
+    }
   }
 
   /// Commands
