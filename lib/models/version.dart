@@ -11,15 +11,14 @@ abstract class Version with _$Version {
     @Default(0) int versionCode,
     @Default('1yyMMdd+') String versionCodeFormat,
 
+    /// Build Arguments
+    @JsonKey(includeIfNull: false) List<String>? buildArguments,
 
-    @JsonKey(includeIfNull: false)
-    List<String>? arguments,
-
-    @JsonKey(includeIfNull: false)
-    List<String>? buildAfterCommand,
-
-    @JsonKey(includeIfNull: false)
-    List<String>? buildBeforeCommand,
+    /// Build Before-After Commands
+    @JsonKey(includeIfNull: false) List<String>? afterCommand,
+    @JsonKey(includeIfNull: false) String? afterCommandPwd,
+    @JsonKey(includeIfNull: false) List<String>? beforeCommand,
+    @JsonKey(includeIfNull: false) String? beforeCommandPwd,
   }) = _Version;
 
   const Version._();

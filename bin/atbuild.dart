@@ -211,9 +211,13 @@ void main(List<String> args) async {
 
   await updateYaml(version.versionName, version.versionCode);
 
-  if (version.buildBeforeCommand != null) {
-    final [executable, ...arguments] = version.buildBeforeCommand!;
-    await Process.run(executable, arguments);
+  if (version.beforeCommand != null) {
+    final [executable, ...arguments] = version.beforeCommand!;
+    await Process.start(
+      executable,
+      arguments,
+      workingDirectory: version.beforeCommandPwd ?? cwd,
+    );
   }
 
   /// Commands
@@ -254,7 +258,7 @@ void main(List<String> args) async {
           if (arguments.flag('verbose')) '--verbose',
 
           /// Platform Arguments
-          ...?version.arguments,
+          ...?version.buildArguments,
         ],
       ),
   ];
@@ -266,8 +270,12 @@ void main(List<String> args) async {
 
   updateConfigFile(versionFile);
 
-  if (version.buildAfterCommand != null) {
-    final [executable, ...arguments] = version.buildAfterCommand!;
-    await Process.run(executable, arguments);
+  if (version.afterCommand != null) {
+    final [executable, ...arguments] = version.afterCommand!;
+    await Process.start(
+      executable,
+      arguments,
+      workingDirectory: version.afterCommandPwd ?? cwd,
+    );
   }
 }
