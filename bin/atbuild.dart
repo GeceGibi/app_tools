@@ -6,6 +6,15 @@ import 'package:app_tools/worker.dart';
 import 'package:args/args.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
+final defaultVersions = {
+  'android': const Version(package: 'appbundle'),
+  'web': const Version(package: 'web'),
+  'ios': const Version(package: 'ipa'),
+  'macos': const Version(package: 'macos'),
+  'windows': const Version(package: 'windows'),
+  'linux': const Version(package: 'linux'),
+};
+
 const jsonEncoder = JsonEncoder.withIndent('    ');
 final String cwd = Directory.current.path;
 final versions = <String, Version>{};
@@ -98,7 +107,7 @@ Version generateVersion(String platform, {String? flavor}) {
   final key = platformKey(platform, flavor: flavor);
 
   if (!versions.containsKey(key)) {
-    versions[key] = const Version();
+    throw Exception('Version file not found: $key');
   }
 
   final Version(
@@ -126,16 +135,7 @@ void initVersionFile() {
     return;
   }
 
-  final platforms = {
-    'android': const Version(package: 'appbundle'),
-    'web': const Version(package: 'web'),
-    'ios': const Version(package: 'ipa'),
-    'macos': const Version(package: 'macos'),
-    'windows': const Version(package: 'windows'),
-    'linux': const Version(package: 'linux'),
-  };
-
-  final availablePlatforms = platforms.entries.where((entry) {
+  final availablePlatforms = defaultVersions.entries.where((entry) {
     final MapEntry(:key, :value) = entry;
     return Directory(key).existsSync();
   });
@@ -157,31 +157,22 @@ void main(List<String> args) async {
       'platform',
       abbr: 'p',
       help: 'Build runs for which platform',
-      // allowed: ['ios', 'google', 'huawei', 'web', 'macos', 'windows', 'linux'],
-      allowedHelp: {
-        'ios': 'Build ipa',
-        'android': 'Build App Bundle (*.aab) file',
-        'web': 'Build Web',
-        'macos': 'Build Macos',
-        'windows': 'Build Windows',
-        'linux': 'Build Linux',
-      },
+      allowedHelp: defaultVersions.map(
+        (key, value) => MapEntry(key, value.package),
+      ),
     )
     ..addOption(
       'file',
       help: '.versions.json path',
       defaultsTo: '.versions.json',
     )
-    ..addOption('export-options-plist', help: 'Export options plist path')
     ..addOption('flavor', abbr: 'f')
-    ..addFlag('production')
     ..addFlag('clean', abbr: 'c')
     ..addFlag('obfuscate', abbr: 'o', defaultsTo: true)
     ..addFlag('build', abbr: 'b')
     ..addFlag('verbose')
     ..addFlag('init')
-    ..addFlag('help')
-    ..addFlag('no-codesign', abbr: 's');
+    ..addFlag('help');
 
   final arguments = parser.parse(args);
 

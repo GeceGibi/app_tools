@@ -6,11 +6,11 @@ part 'version.freezed.dart';
 @freezed
 abstract class Version with _$Version {
   const factory Version({
+    required String package,
     @Default('0.0.1') String versionName,
     @Default(0) int versionCode,
     @Default('1yyMMdd+') String versionCodeFormat,
     @Default([]) List<String> arguments,
-    @JsonKey(includeIfNull: false) String? package,
   }) = _Version;
 
   const Version._();
