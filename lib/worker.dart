@@ -21,6 +21,7 @@ class Work {
   static String replaceTemplate(String template) {
     final variables = {
       'cwd': Directory.current.path,
+      ...Platform.environment,
     };
 
     return template.replaceAllMapped(
