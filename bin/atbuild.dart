@@ -261,10 +261,10 @@ void main(List<String> args) async {
           /// Obfuscate
           if (arguments.flag('obfuscate')) ...[
             '--obfuscate',
-            if (flavor != null)
-              '--split-debug-info=build/$platform/$flavor/symbols'
-            else
+            [
               '--split-debug-info=build/$platform/symbols',
+              if (flavor != null) '/$flavor',
+            ].join(),
           ],
 
           /// version
