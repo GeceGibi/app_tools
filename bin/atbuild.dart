@@ -115,11 +115,11 @@ PlatformEntry generateVersion(String platform, {String? flavor}) {
   final versionName = updateVersionName(version);
   final versionCode = updateVersionCode(version);
 
-  platforms[key] = platforms[key]!.copyWith(
-    version: version.copyWith(value: '$versionName+$versionCode'),
+  return platforms[key]!.copyWith(
+    version: version.copyWith(
+      value: '$versionName+$versionCode',
+    ),
   );
-
-  return platforms[key]!;
 }
 
 void initVersionFile() {
@@ -291,8 +291,6 @@ void main(List<String> args) async {
     Printer.write('');
   }
 
-  updateConfigFile(versionFile);
-
   if (run?.after != null) {
     final command = Work.replaceTemplate(
       run!.after!,
@@ -309,4 +307,7 @@ void main(List<String> args) async {
       return;
     }
   }
+
+  /// if everything ok update the version file.
+  updateConfigFile(versionFile);
 }
