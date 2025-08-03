@@ -271,7 +271,7 @@ void main(List<String> args) async {
 
           /// Platform Arguments
           ...?build.arguments,
-        ].join(),
+        ].join(' '),
       ),
   ];
 
