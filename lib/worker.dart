@@ -6,14 +6,12 @@ class Work {
   const Work({
     required this.description,
     required this.command,
-    this.onComplete,
     this.pwd,
   });
 
   final String description;
   final String command;
   final String? pwd;
-  final void Function(int statusCode)? onComplete;
 
   static String replaceTemplate(
     String template, {
@@ -63,8 +61,6 @@ class Work {
     } else {
       Printer.error('└❯ Failed, exitCode($exitCode)');
     }
-
-    onComplete?.call(exitCode);
 
     return exitCode;
   }

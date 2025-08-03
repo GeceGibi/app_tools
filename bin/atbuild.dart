@@ -280,10 +280,8 @@ void main(List<String> args) async {
       ),
   ];
 
-  var exitCode = 0;
-
   for (final work in works) {
-    exitCode = await work.run(verbose: arguments.flag('verbose'));
+    final exitCode = await work.run(verbose: arguments.flag('verbose'));
 
     if (exitCode != 0) {
       Printer.error('Build failed.');
