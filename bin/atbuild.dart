@@ -226,6 +226,8 @@ void main(List<String> args) async {
       command: command,
     ).run(verbose: true);
 
+    Printer.write('');
+
     if (exitCode != 0) {
       Printer.error('Run-Before command failed.');
       return;
