@@ -894,7 +894,7 @@ as List<String>?,
 /// @nodoc
 mixin _$Run {
 
- Runner get after; Runner get before;
+@JsonKey(includeIfNull: false) String? get after;@JsonKey(includeIfNull: false) String? get before;
 /// Create a copy of Run
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -927,11 +927,11 @@ abstract mixin class $RunCopyWith<$Res>  {
   factory $RunCopyWith(Run value, $Res Function(Run) _then) = _$RunCopyWithImpl;
 @useResult
 $Res call({
- Runner after, Runner before
+@JsonKey(includeIfNull: false) String? after,@JsonKey(includeIfNull: false) String? before
 });
 
 
-$RunnerCopyWith<$Res> get after;$RunnerCopyWith<$Res> get before;
+
 
 }
 /// @nodoc
@@ -944,32 +944,14 @@ class _$RunCopyWithImpl<$Res>
 
 /// Create a copy of Run
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? after = null,Object? before = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? after = freezed,Object? before = freezed,}) {
   return _then(_self.copyWith(
-after: null == after ? _self.after : after // ignore: cast_nullable_to_non_nullable
-as Runner,before: null == before ? _self.before : before // ignore: cast_nullable_to_non_nullable
-as Runner,
+after: freezed == after ? _self.after : after // ignore: cast_nullable_to_non_nullable
+as String?,before: freezed == before ? _self.before : before // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
-/// Create a copy of Run
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$RunnerCopyWith<$Res> get after {
-  
-  return $RunnerCopyWith<$Res>(_self.after, (value) {
-    return _then(_self.copyWith(after: value));
-  });
-}/// Create a copy of Run
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$RunnerCopyWith<$Res> get before {
-  
-  return $RunnerCopyWith<$Res>(_self.before, (value) {
-    return _then(_self.copyWith(before: value));
-  });
-}
+
 }
 
 
@@ -1051,7 +1033,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Runner after,  Runner before)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  String? after, @JsonKey(includeIfNull: false)  String? before)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Run() when $default != null:
 return $default(_that.after,_that.before);case _:
@@ -1072,7 +1054,7 @@ return $default(_that.after,_that.before);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Runner after,  Runner before)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  String? after, @JsonKey(includeIfNull: false)  String? before)  $default,) {final _that = this;
 switch (_that) {
 case _Run():
 return $default(_that.after,_that.before);case _:
@@ -1092,7 +1074,7 @@ return $default(_that.after,_that.before);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Runner after,  Runner before)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  String? after, @JsonKey(includeIfNull: false)  String? before)?  $default,) {final _that = this;
 switch (_that) {
 case _Run() when $default != null:
 return $default(_that.after,_that.before);case _:
@@ -1107,11 +1089,11 @@ return $default(_that.after,_that.before);case _:
 @JsonSerializable()
 
 class _Run implements Run {
-  const _Run({required this.after, required this.before});
+  const _Run({@JsonKey(includeIfNull: false) this.after, @JsonKey(includeIfNull: false) this.before});
   factory _Run.fromJson(Map<String, dynamic> json) => _$RunFromJson(json);
 
-@override final  Runner after;
-@override final  Runner before;
+@override@JsonKey(includeIfNull: false) final  String? after;
+@override@JsonKey(includeIfNull: false) final  String? before;
 
 /// Create a copy of Run
 /// with the given fields replaced by the non-null parameter values.
@@ -1146,11 +1128,11 @@ abstract mixin class _$RunCopyWith<$Res> implements $RunCopyWith<$Res> {
   factory _$RunCopyWith(_Run value, $Res Function(_Run) _then) = __$RunCopyWithImpl;
 @override @useResult
 $Res call({
- Runner after, Runner before
+@JsonKey(includeIfNull: false) String? after,@JsonKey(includeIfNull: false) String? before
 });
 
 
-@override $RunnerCopyWith<$Res> get after;@override $RunnerCopyWith<$Res> get before;
+
 
 }
 /// @nodoc
@@ -1163,300 +1145,10 @@ class __$RunCopyWithImpl<$Res>
 
 /// Create a copy of Run
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? after = null,Object? before = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? after = freezed,Object? before = freezed,}) {
   return _then(_Run(
-after: null == after ? _self.after : after // ignore: cast_nullable_to_non_nullable
-as Runner,before: null == before ? _self.before : before // ignore: cast_nullable_to_non_nullable
-as Runner,
-  ));
-}
-
-/// Create a copy of Run
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$RunnerCopyWith<$Res> get after {
-  
-  return $RunnerCopyWith<$Res>(_self.after, (value) {
-    return _then(_self.copyWith(after: value));
-  });
-}/// Create a copy of Run
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$RunnerCopyWith<$Res> get before {
-  
-  return $RunnerCopyWith<$Res>(_self.before, (value) {
-    return _then(_self.copyWith(before: value));
-  });
-}
-}
-
-
-/// @nodoc
-mixin _$Runner {
-
- List<String> get commands; String? get pwd;
-/// Create a copy of Runner
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$RunnerCopyWith<Runner> get copyWith => _$RunnerCopyWithImpl<Runner>(this as Runner, _$identity);
-
-  /// Serializes this Runner to a JSON map.
-  Map<String, dynamic> toJson();
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Runner&&const DeepCollectionEquality().equals(other.commands, commands)&&(identical(other.pwd, pwd) || other.pwd == pwd));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(commands),pwd);
-
-@override
-String toString() {
-  return 'Runner(commands: $commands, pwd: $pwd)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $RunnerCopyWith<$Res>  {
-  factory $RunnerCopyWith(Runner value, $Res Function(Runner) _then) = _$RunnerCopyWithImpl;
-@useResult
-$Res call({
- List<String> commands, String? pwd
-});
-
-
-
-
-}
-/// @nodoc
-class _$RunnerCopyWithImpl<$Res>
-    implements $RunnerCopyWith<$Res> {
-  _$RunnerCopyWithImpl(this._self, this._then);
-
-  final Runner _self;
-  final $Res Function(Runner) _then;
-
-/// Create a copy of Runner
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? commands = null,Object? pwd = freezed,}) {
-  return _then(_self.copyWith(
-commands: null == commands ? _self.commands : commands // ignore: cast_nullable_to_non_nullable
-as List<String>,pwd: freezed == pwd ? _self.pwd : pwd // ignore: cast_nullable_to_non_nullable
-as String?,
-  ));
-}
-
-}
-
-
-/// Adds pattern-matching-related methods to [Runner].
-extension RunnerPatterns on Runner {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Runner value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _Runner() when $default != null:
-return $default(_that);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Runner value)  $default,){
-final _that = this;
-switch (_that) {
-case _Runner():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Runner value)?  $default,){
-final _that = this;
-switch (_that) {
-case _Runner() when $default != null:
-return $default(_that);case _:
-  return null;
-
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<String> commands,  String? pwd)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _Runner() when $default != null:
-return $default(_that.commands,_that.pwd);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<String> commands,  String? pwd)  $default,) {final _that = this;
-switch (_that) {
-case _Runner():
-return $default(_that.commands,_that.pwd);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<String> commands,  String? pwd)?  $default,) {final _that = this;
-switch (_that) {
-case _Runner() when $default != null:
-return $default(_that.commands,_that.pwd);case _:
-  return null;
-
-}
-}
-
-}
-
-/// @nodoc
-@JsonSerializable()
-
-class _Runner implements Runner {
-  const _Runner({required final  List<String> commands, required this.pwd}): _commands = commands;
-  factory _Runner.fromJson(Map<String, dynamic> json) => _$RunnerFromJson(json);
-
- final  List<String> _commands;
-@override List<String> get commands {
-  if (_commands is EqualUnmodifiableListView) return _commands;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_commands);
-}
-
-@override final  String? pwd;
-
-/// Create a copy of Runner
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$RunnerCopyWith<_Runner> get copyWith => __$RunnerCopyWithImpl<_Runner>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$RunnerToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Runner&&const DeepCollectionEquality().equals(other._commands, _commands)&&(identical(other.pwd, pwd) || other.pwd == pwd));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_commands),pwd);
-
-@override
-String toString() {
-  return 'Runner(commands: $commands, pwd: $pwd)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$RunnerCopyWith<$Res> implements $RunnerCopyWith<$Res> {
-  factory _$RunnerCopyWith(_Runner value, $Res Function(_Runner) _then) = __$RunnerCopyWithImpl;
-@override @useResult
-$Res call({
- List<String> commands, String? pwd
-});
-
-
-
-
-}
-/// @nodoc
-class __$RunnerCopyWithImpl<$Res>
-    implements _$RunnerCopyWith<$Res> {
-  __$RunnerCopyWithImpl(this._self, this._then);
-
-  final _Runner _self;
-  final $Res Function(_Runner) _then;
-
-/// Create a copy of Runner
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? commands = null,Object? pwd = freezed,}) {
-  return _then(_Runner(
-commands: null == commands ? _self._commands : commands // ignore: cast_nullable_to_non_nullable
-as List<String>,pwd: freezed == pwd ? _self.pwd : pwd // ignore: cast_nullable_to_non_nullable
+after: freezed == after ? _self.after : after // ignore: cast_nullable_to_non_nullable
+as String?,before: freezed == before ? _self.before : before // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

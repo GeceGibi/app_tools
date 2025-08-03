@@ -1,0 +1,20 @@
+secil:ios:
+  build:
+    package: ipa
+    arguments:
+      - "--export-options-plist=ios/ExportOptions.plist"
+  version:
+    value: 1.8.7+1250806
+    format: 1yyMMdd
+    autoIncrement: true
+
+secil:android:
+  build:
+    package: appbundle
+  version:
+    value: 1.8.7+125080332
+    format: 1yyMMddHH
+    autoIncrement: true
+  run:
+    before: "cd ../ && ls -la"
+

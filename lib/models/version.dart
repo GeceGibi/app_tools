@@ -53,16 +53,10 @@ abstract class Build with _$Build {
 
 @freezed
 abstract class Run with _$Run {
-  const factory Run({required Runner after, required Runner before}) = _Run;
+  const factory Run({
+    @JsonKey(includeIfNull: false) String? after,
+    @JsonKey(includeIfNull: false) String? before,
+  }) = _Run;
+
   factory Run.fromJson(Map<String, dynamic> json) => _$RunFromJson(json);
-}
-
-@freezed
-abstract class Runner with _$Runner {
-  const factory Runner({
-    required List<String> commands,
-    required String? pwd,
-  }) = _Runner;
-
-  factory Runner.fromJson(Map<String, dynamic> json) => _$RunnerFromJson(json);
 }

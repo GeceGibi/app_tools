@@ -50,24 +50,10 @@ Map<String, dynamic> _$BuildToJson(_Build instance) => <String, dynamic>{
   'arguments': ?instance.arguments,
 };
 
-_Run _$RunFromJson(Map<String, dynamic> json) => _Run(
-  after: Runner.fromJson(json['after'] as Map<String, dynamic>),
-  before: Runner.fromJson(json['before'] as Map<String, dynamic>),
-);
+_Run _$RunFromJson(Map<String, dynamic> json) =>
+    _Run(after: json['after'] as String?, before: json['before'] as String?);
 
 Map<String, dynamic> _$RunToJson(_Run instance) => <String, dynamic>{
-  'after': instance.after.toJson(),
-  'before': instance.before.toJson(),
-};
-
-_Runner _$RunnerFromJson(Map<String, dynamic> json) => _Runner(
-  commands: (json['commands'] as List<dynamic>)
-      .map((e) => e as String)
-      .toList(),
-  pwd: json['pwd'] as String?,
-);
-
-Map<String, dynamic> _$RunnerToJson(_Runner instance) => <String, dynamic>{
-  'commands': instance.commands,
-  'pwd': instance.pwd,
+  'after': ?instance.after,
+  'before': ?instance.before,
 };

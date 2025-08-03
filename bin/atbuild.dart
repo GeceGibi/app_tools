@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:app_tools/models/models.dart';
 import 'package:app_tools/printer.dart';
 import 'package:app_tools/worker.dart';
 import 'package:app_tools/yaml.dart';
 import 'package:args/args.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
 final defaultVersions = {
@@ -214,23 +216,19 @@ void main(List<String> args) async {
   await updatePlatformProjectYaml(version.name, version.code);
 
   if (run?.before != null) {
-    for (final comandLine in run!.before.commands) {
-      final [command, ...arguments] = Work.replaceTemplate(
-        comandLine,
-        variables: variables,
-      ).split(' ');
+    final command = Work.replaceTemplate(
+      run!.before!,
+      variables: variables,
+    );
 
-      final exitCode = await Work(
-        description: 'Running before command.',
-        command: command,
-        arguments: arguments,
-        pwd: run.before.pwd,
-      ).run(verbose: true);
+    final exitCode = await Work(
+      description: 'Running before command.',
+      command: command,
+    ).run(verbose: true);
 
-      if (exitCode != 0) {
-        Printer.error('Run-Before command failed.');
-        return;
-      }
+    if (exitCode != 0) {
+      Printer.error('Run-Before command failed.');
+      return;
     }
   }
 
@@ -240,17 +238,15 @@ void main(List<String> args) async {
     if (arguments.flag('clean'))
       const Work(
         description: 'Cleaning project.',
-        command: 'flutter',
-        arguments: ['clean'],
+        command: 'flutter clean',
       ),
 
     /// Build
     if (arguments.flag('build'))
       Work(
         description: 'Build Starting.',
-        command: 'flutter',
-        arguments: [
-          'build',
+        command: [
+          'flutter build',
 
           /// Package
           build.package,
@@ -273,7 +269,7 @@ void main(List<String> args) async {
 
           /// Platform Arguments
           ...?build.arguments,
-        ],
+        ].join(),
       ),
   ];
 
@@ -292,24 +288,20 @@ void main(List<String> args) async {
 
   updateConfigFile(versionFile);
 
-    if (run?.after != null) {
-    for (final comandLine in run!.after.commands) {
-      final [command, ...arguments] = Work.replaceTemplate(
-        comandLine,
-        variables: variables,
-      ).split(' ');
+  if (run?.after != null) {
+    final command = Work.replaceTemplate(
+      run!.after!,
+      variables: variables,
+    );
 
-      final exitCode = await Work(
-        description: 'Running after command.',
-        command: command,
-        arguments: arguments,
-        pwd: run.after.pwd,
-      ).run(verbose: true);
+    final exitCode = await Work(
+      description: 'Running after command.',
+      command: command,
+    ).run(verbose: true);
 
-      if (exitCode != 0) {
-        Printer.error('Run-After command failed.');
-        return;
-      }
+    if (exitCode != 0) {
+      Printer.error('Run-After command failed.');
+      return;
     }
   }
 }

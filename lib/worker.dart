@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:app_tools/printer.dart';
 
 class Work {
   const Work({
     required this.description,
     required this.command,
-    required this.arguments,
     this.onComplete,
     this.pwd,
   });
@@ -15,7 +13,6 @@ class Work {
   final String description;
   final String command;
   final String? pwd;
-  final List<String> arguments;
   final void Function(int statusCode)? onComplete;
 
   static String replaceTemplate(
@@ -33,7 +30,7 @@ class Work {
 
   Future<int> run({bool verbose = false}) async {
     Printer.warning('┌⏺ $description');
-    Printer.info('├❯ Running: $command ${arguments.join(" ")}');
+    Printer.info('├❯ Running: $command');
 
     if (pwd != null) {
       Printer.info('├❯ Working Directory: $pwd');
@@ -41,9 +38,10 @@ class Work {
 
     final process =
         await Process.start(
-            command,
-            arguments,
+            'bash',
+            ['-c', command],
             workingDirectory: pwd,
+            runInShell: true,
           )
           ..stderr.listen((bytes) {
             final text = utf8.decode(bytes).trim();
