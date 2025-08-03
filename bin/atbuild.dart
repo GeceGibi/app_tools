@@ -130,19 +130,13 @@ void initVersionFile() {
     return;
   }
 
-  final defaults = _defaultPlatforms.map((key, value) {
-    return MapEntry(key, value.toJson());
-  });
+  final yamlEditor = YamlEditor('');
 
-  final newDefaults = <String, Map<String, dynamic>>{};
-
-  for (final MapEntry(:key, :value) in defaults.entries) {
+  for (final MapEntry(:key, :value) in _defaultPlatforms.entries) {
     if (Directory(key).existsSync()) {
-      newDefaults[key] = value;
+      yamlEditor.update([key], value.toJson());
     }
   }
-
-  final yamlEditor = YamlEditor('')..update([], newDefaults);
 
   file
     ..createSync(recursive: true)
