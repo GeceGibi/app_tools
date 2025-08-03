@@ -131,12 +131,15 @@ void initVersionFile() {
   }
 
   final yamlEditor = YamlEditor('');
+  final availablePlatforms = <String, Map<String, dynamic>>{};
 
   for (final MapEntry(:key, :value) in _defaultPlatforms.entries) {
     if (Directory(key).existsSync()) {
-      yamlEditor.update([key], value.toJson());
+      availablePlatforms[key] = value.toJson();
     }
   }
+
+  yamlEditor.update([], availablePlatforms);
 
   file
     ..createSync(recursive: true)
