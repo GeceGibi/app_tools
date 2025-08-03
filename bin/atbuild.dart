@@ -5,6 +5,7 @@ import 'package:app_tools/printer.dart';
 import 'package:app_tools/worker.dart';
 import 'package:args/args.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:path/path.dart';
 
 final defaultVersions = {
   'android': const Version(package: 'appbundle'),
@@ -212,20 +213,22 @@ void main(List<String> args) async {
   await updateYaml(version.versionName, version.versionCode);
 
   if (version.runBefore != null) {
-    final [command, ...arguments] = Work.replaceTemplate(
-      version.runBefore!,
-    ).split(' ');
+    final segments = version.runBefore!.split('&&').map((e) => e.trim());
 
-    final exitCode = await Work(
-      description: 'Running before command.',
-      command: command,
-      arguments: arguments,
-      pwd: Work.replaceTemplate(version.runBeforePwd ?? ''),
-    ).run(verbose: true);
+    for (final segment in segments) {
+      final [command, ...arguments] = Work.replaceTemplate(segment).split(' ');
 
-    if (exitCode != 0) {
-      Printer.error('Run-Before command failed.');
-      return;
+      final exitCode = await Work(
+        description: 'Running before command.',
+        command: command,
+        arguments: arguments,
+        pwd: Work.replaceTemplate(version.runBeforePwd ?? ''),
+      ).run(verbose: true);
+
+      if (exitCode != 0) {
+        Printer.error('Run-Before command failed.');
+        return;
+      }
     }
   }
 
@@ -288,15 +291,17 @@ void main(List<String> args) async {
   updateConfigFile(versionFile);
 
   if (version.runAfter != null) {
-    final [command, ...arguments] = Work.replaceTemplate(
-      version.runAfter!,
-    ).split(' ');
+    final segments = version.runAfter!.split('&&').map((e) => e.trim());
 
-    await Work(
-      description: 'Running after command.',
-      command: command,
-      arguments: arguments,
-      pwd: Work.replaceTemplate(version.runAfterPwd ?? ''),
-    ).run(verbose: true);
+    for (final segment in segments) {
+      final [command, ...arguments] = Work.replaceTemplate(segment).split(' ');
+
+      await Work(
+        description: 'Running after command.',
+        command: command,
+        arguments: arguments,
+        pwd: Work.replaceTemplate(version.runAfterPwd ?? ''),
+      ).run(verbose: true);
+    }
   }
 }
