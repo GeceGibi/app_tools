@@ -4,13 +4,12 @@ import 'dart:io';
 import 'package:app_tools/models/models.dart';
 import 'package:app_tools/printer.dart';
 import 'package:app_tools/worker.dart';
-import 'package:app_tools/yaml.dart';
 import 'package:args/args.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
+import 'package:yaml_edit/yaml_edit.dart';
 
-final defaultVersions = {
+final _defaultPlatforms = {
   'android': const PlatformEntry(build: Build(package: 'appbundle')),
   'web': const PlatformEntry(build: Build(package: 'web')),
   'ios': const PlatformEntry(build: Build(package: 'ipa')),
@@ -60,8 +59,13 @@ void readConfigFile(File file) {
 }
 
 void updateConfigFile(File file) {
-  final jsonData = platforms.map((key, value) => MapEntry(key, value.toJson()));
-  file.writeAsStringSync(jsonToYaml(jsonData));
+  final yamlEditor = YamlEditor(file.readAsStringSync());
+
+  platforms.forEach((key, value) {
+    yamlEditor.update([key], value.toJson());
+  });
+
+  file.writeAsStringSync(yamlEditor.toString());
 }
 
 Future<void> updatePlatformProjectYaml(
@@ -126,19 +130,23 @@ void initVersionFile() {
     return;
   }
 
-  final availablePlatforms = defaultVersions.entries.where((entry) {
-    final MapEntry(:key) = entry;
-    return Directory(key).existsSync();
+  final defaults = _defaultPlatforms.map((key, value) {
+    return MapEntry(key, value.toJson());
   });
 
-  final jsonData = {
-    for (final MapEntry(:key, :value) in availablePlatforms)
-      key: value.toJson(),
-  };
+  final newDefaults = <String, Map<String, dynamic>>{};
+
+  for (final MapEntry(:key, :value) in defaults.entries) {
+    if (Directory(key).existsSync()) {
+      newDefaults[key] = value;
+    }
+  }
+
+  final yamlEditor = YamlEditor('')..update([], newDefaults);
 
   file
     ..createSync(recursive: true)
-    ..writeAsStringSync(jsonToYaml(jsonData));
+    ..writeAsStringSync(yamlEditor.toString());
   return;
 }
 
@@ -148,7 +156,7 @@ void main(List<String> args) async {
       'platform',
       abbr: 'p',
       help: 'Build runs for which platform',
-      allowedHelp: defaultVersions.map((key, value) {
+      allowedHelp: _defaultPlatforms.map((key, value) {
         return MapEntry(key, value.build.package);
       }),
     )

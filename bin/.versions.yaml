@@ -1,20 +1,44 @@
-secil:ios:
-  build:
-    package: ipa
-    arguments:
-      - "--export-options-plist=ios/ExportOptions.plist"
-  version:
-    value: 1.8.7+1250806
-    format: 1yyMMdd
-    autoIncrement: true
-
-secil:android:
+android:
   build:
     package: appbundle
   version:
-    value: 1.8.7+125080332
-    format: 1yyMMddHH
+    value: 0.0.1+1250809
+    format: 1yyMMdd
     autoIncrement: true
-  run:
-    before: "cd ../ && ls -la"
 
+# Deneme
+web:
+  build:
+    package: web
+  version:
+    value: 0.0.1+0
+    format: 1yyMMdd
+    autoIncrement: false
+ios:
+  build:
+    package: ipa
+  version:
+    value: 0.0.1+0
+    format: 1yyMMdd
+    autoIncrement: false
+macos:
+  build:
+    package: macos
+  version:
+    value: 0.0.1+0
+    format: 1yyMMdd
+    autoIncrement: false
+windows:
+  build:
+    package: windows
+  version:
+    value: 0.0.1+0
+    format: 1yyMMdd
+    autoIncrement: false
+linux:
+  build:
+    package: linux
+  version:
+    value: 0.0.1+0
+    format: 1yyMMdd
+    autoIncrement: false
