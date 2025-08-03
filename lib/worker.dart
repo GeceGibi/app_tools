@@ -43,7 +43,7 @@ class Work {
           )
           ..stderr.listen((bytes) {
             final text = utf8.decode(bytes).trim();
-            return Printer.error('├❯ $text');
+            return Printer.error(text);
           })
           ..stdout.listen((bytes) {
             if (!verbose) {
@@ -51,7 +51,7 @@ class Work {
             }
 
             final text = utf8.decode(bytes).trim();
-            Printer.write('├❯ $text');
+            Printer.write(text);
           });
 
     final exitCode = await process.exitCode;
