@@ -18,12 +18,10 @@ class Work {
   final List<String> arguments;
   final void Function(int statusCode)? onComplete;
 
-  static String replaceTemplate(String template) {
-    final variables = {
-      ...Platform.environment,
-      'CWD': Directory.current.path,
-    };
-
+  static String replaceTemplate(
+    String template, {
+    Map<String, dynamic> variables = const {},
+  }) {
     return template.replaceAllMapped(
       RegExp(r'\{(\w+)\}'),
       (match) {
@@ -47,13 +45,17 @@ class Work {
             arguments,
             workingDirectory: pwd,
           )
-          ..stderr.listen((bytes) => Printer.error(utf8.decode(bytes).trim()))
+          ..stderr.listen((bytes) {
+            final text = utf8.decode(bytes).trim();
+            return Printer.error('├❯ $text');
+          })
           ..stdout.listen((bytes) {
             if (!verbose) {
               return;
             }
 
-            Printer.write(utf8.decode(bytes).trim());
+            final text = utf8.decode(bytes).trim();
+            Printer.write('├❯ $text');
           });
 
     final exitCode = await process.exitCode;

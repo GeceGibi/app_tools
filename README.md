@@ -49,8 +49,8 @@ atbuild -p google -c -b -o
 - **-o, --obfuscate**: Enable code obfuscation (default: true)
 - **-s, --no-codesign**: Skip code signing (iOS only)
 - **--production**: Production build flag
-- **--init**: Initialize .versions.json file
-- **--file**: Custom .versions.json file path (default: .versions.json)
+- **--init**: Initialize .versions.yaml file
+- **--file**: Custom .versions.yaml file path (default: .versions.yaml)
 
 ### atclean
 Used for project cleaning and dependency reinstallation operations.
