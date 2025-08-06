@@ -5,27 +5,9 @@ part 'version.g.dart';
 part 'version.freezed.dart';
 
 @freezed
-abstract class PlatformEntry with _$PlatformEntry {
-  const factory PlatformEntry({
-    required Build build,
-
-    /// Version
-    @Default(Version()) Version version,
-
-    /// Build Before-After Commands
-    @JsonKey(includeIfNull: false) Run? run,
-  }) = _PlatformEntry;
-
-  const PlatformEntry._();
-
-  factory PlatformEntry.fromJson(Map<String, dynamic> json) =>
-      _$PlatformEntryFromJson(json);
-}
-
-@freezed
 abstract class Version with _$Version {
   const factory Version({
-    @Default('0.0.1+0') String value,
+    @Default('0.0.1+0') String version,
     @FormatParser() @Default('1yyMMdd') String format,
     @Default(false) bool autoIncrement,
   }) = _Version;
@@ -35,28 +17,6 @@ abstract class Version with _$Version {
 
   const Version._();
 
-  String get name => value.split('+').first;
-  int get code => int.parse(value.split('+').last);
-}
-
-@freezed
-abstract class Build with _$Build {
-  const factory Build({
-    required String package,
-
-    /// Build Arguments
-    @JsonKey(includeIfNull: false) List<String>? arguments,
-  }) = _Build;
-
-  factory Build.fromJson(Map<String, dynamic> json) => _$BuildFromJson(json);
-}
-
-@freezed
-abstract class Run with _$Run {
-  const factory Run({
-    @JsonKey(includeIfNull: false) String? after,
-    @JsonKey(includeIfNull: false) String? before,
-  }) = _Run;
-
-  factory Run.fromJson(Map<String, dynamic> json) => _$RunFromJson(json);
+  String get name => version.split('+').first;
+  int get code => int.parse(version.split('+').last);
 }

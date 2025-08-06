@@ -9,17 +9,17 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
-final _defaultPlatforms = {
-  'android': const PlatformEntry(build: Build(package: 'appbundle')),
-  'web': const PlatformEntry(build: Build(package: 'web')),
-  'ios': const PlatformEntry(build: Build(package: 'ipa')),
-  'macos': const PlatformEntry(build: Build(package: 'macos')),
-  'windows': const PlatformEntry(build: Build(package: 'windows')),
-  'linux': const PlatformEntry(build: Build(package: 'linux')),
-};
+final _defaultPlatforms = [
+  'android',
+  'web',
+  'ios',
+  'macos',
+  'windows',
+  'linux',
+];
 
 final String cwd = Directory.current.path;
-final platforms = <String, PlatformEntry>{};
+final platforms = <String, Version>{};
 
 String updateVersionName(Version version) {
   // TODO: Implement version name upgrade logic
@@ -53,7 +53,7 @@ void readConfigFile(File file) {
 
   platforms.addAll(
     configFile.map((key, value) {
-      return MapEntry(key, PlatformEntry.fromJson(value));
+      return MapEntry(key, Version.fromJson(value));
     }),
   );
 }
@@ -103,22 +103,20 @@ String platformKey(String platform, {String? flavor}) {
   return '$flavor:$platform';
 }
 
-PlatformEntry generateVersion(String platform, {String? flavor}) {
+Version generateVersion(String platform, {String? flavor}) {
   final key = platformKey(platform, flavor: flavor);
 
   if (!platforms.containsKey(key)) {
     throw Exception('Version file not found: $key');
   }
 
-  final PlatformEntry(:version) = platforms[key]!;
+  final version = platforms[key]!;
 
   final versionName = updateVersionName(version);
   final versionCode = updateVersionCode(version);
 
   return platforms[key]!.copyWith(
-    version: version.copyWith(
-      value: '$versionName+$versionCode',
-    ),
+    version: '$versionName+$versionCode',
   );
 }
 
@@ -133,10 +131,10 @@ void initVersionFile() {
   final yamlEditor = YamlEditor('');
   final availablePlatforms = <String, Map<String, dynamic>>{};
 
-  for (final MapEntry(:key, :value) in _defaultPlatforms.entries) {
-    if (Directory(key).existsSync()) {
-      availablePlatforms[key] = value.toJson();
-    }
+  for (final platform in _defaultPlatforms) {
+    // if (Directory(platform).existsSync()) {
+      availablePlatforms[platform] = const Version().toJson();
+    // }
   }
 
   yamlEditor.update([], availablePlatforms);
@@ -149,23 +147,13 @@ void initVersionFile() {
 
 void main(List<String> args) async {
   final parser = ArgParser()
-    ..addOption(
-      'platform',
-      abbr: 'p',
-      help: 'Build runs for which platform',
-      allowedHelp: _defaultPlatforms.map((key, value) {
-        return MapEntry(key, value.build.package);
-      }),
-    )
+    ..addOption('platform', abbr: 'p', help: 'Update version for platform')
     ..addOption(
       'file',
       help: '.versions.yaml path',
       defaultsTo: '.versions.yaml',
     )
     ..addOption('flavor', abbr: 'f')
-    ..addFlag('clean', abbr: 'c')
-    ..addFlag('obfuscate', abbr: 'o', defaultsTo: true)
-    ..addFlag('build', abbr: 'b')
     ..addFlag('verbose')
     ..addFlag('init')
     ..addFlag('help');
@@ -194,10 +182,7 @@ void main(List<String> args) async {
     throw Exception('Platform is not specified');
   }
 
-  final PlatformEntry(:build, :version, :run) = generateVersion(
-    platform,
-    flavor: flavor,
-  );
+  final version = generateVersion(platform, flavor: flavor);
 
   Printer.write('');
   Printer.info('*' * 60);
@@ -208,108 +193,8 @@ void main(List<String> args) async {
   Printer.info('*' * 60);
   Printer.write('');
 
-  final variables = {
-    'VERSION': version.value,
-    'VERSION_NAME': version.name,
-    'VERSION_CODE': version.code,
-    'CWD': cwd,
-    'PLATFORM': platform,
-    'FLAVOR': flavor,
-    ...Platform.environment,
-  };
 
   await updatePlatformProjectYaml(version.name, version.code);
-
-  if (run?.before != null) {
-    final command = Work.replaceTemplate(
-      run!.before!,
-      variables: variables,
-    );
-
-    final exitCode = await Work(
-      description: 'Running before command.',
-      command: command,
-    ).run(verbose: true);
-
-    Printer.write('');
-
-    if (exitCode != 0) {
-      Printer.error('Run-Before command failed.');
-      return;
-    }
-  }
-
-  /// Commands
-  final works = <Work>[
-    /// Clean
-    if (arguments.flag('clean'))
-      const Work(
-        description: 'Cleaning project.',
-        command: 'flutter clean',
-      ),
-
-    /// Build
-    if (arguments.flag('build'))
-      Work(
-        description: 'Build Starting.',
-        command: [
-          'flutter build',
-
-          /// Package
-          build.package,
-
-          /// Flavor
-          if (flavor != null) ...['--flavor', flavor],
-
-          /// Obfuscate
-          if (arguments.flag('obfuscate')) ...[
-            '--obfuscate',
-            [
-              '--split-debug-info=build/$platform/symbols',
-              if (flavor != null) '/$flavor',
-            ].join(),
-          ],
-
-          /// version
-          '--build-name=${version.name}',
-          '--build-number=${version.code}',
-
-          /// Verbose
-          if (arguments.flag('verbose')) '--verbose',
-
-          /// Platform Arguments
-          ...?build.arguments,
-        ].join(' '),
-      ),
-  ];
-
-  for (final work in works) {
-    final exitCode = await work.run(verbose: arguments.flag('verbose'));
-
-    if (exitCode != 0) {
-      Printer.error('Build failed.');
-      return;
-    }
-
-    Printer.write('');
-  }
-
-  if (run?.after != null) {
-    final command = Work.replaceTemplate(
-      run!.after!,
-      variables: variables,
-    );
-
-    final exitCode = await Work(
-      description: 'Running after command.',
-      command: command,
-    ).run(verbose: true);
-
-    if (exitCode != 0) {
-      Printer.error('Run-After command failed.');
-      return;
-    }
-  }
 
   /// if everything ok update the version file.
   updateConfigFile(versionFile);
