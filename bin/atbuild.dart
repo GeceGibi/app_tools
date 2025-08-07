@@ -59,11 +59,13 @@ void readConfigFile(File file) {
 }
 
 void updateConfigFile(File file) {
+
   final yamlEditor = YamlEditor(file.readAsStringSync());
 
   platforms.forEach((key, value) {
     yamlEditor.update([key], value.toJson());
   });
+
 
   file.writeAsStringSync(yamlEditor.toString());
 }
@@ -115,9 +117,11 @@ Version generateVersion(String platform, {String? flavor}) {
   final versionName = updateVersionName(version);
   final versionCode = updateVersionCode(version);
 
-  return platforms[key]!.copyWith(
+   platforms[key] =  platforms[key]!.copyWith(
     version: '$versionName+$versionCode',
   );
+
+  return platforms[key]!;
 }
 
 void initVersionFile() {
@@ -133,7 +137,7 @@ void initVersionFile() {
 
   for (final platform in _defaultPlatforms) {
     // if (Directory(platform).existsSync()) {
-      availablePlatforms[platform] = const Version().toJson();
+    availablePlatforms[platform] = const Version().toJson();
     // }
   }
 
@@ -175,6 +179,8 @@ void main(List<String> args) async {
   /// Read File
   readConfigFile(versionFile);
 
+
+
   final platform = arguments.option('platform');
   final flavor = arguments.option('flavor');
 
@@ -184,6 +190,7 @@ void main(List<String> args) async {
 
   final version = generateVersion(platform, flavor: flavor);
 
+
   Printer.write('');
   Printer.info('*' * 60);
   Printer.info('Platform: $platform');
@@ -192,7 +199,6 @@ void main(List<String> args) async {
   Printer.info('Working Directory: $cwd');
   Printer.info('*' * 60);
   Printer.write('');
-
 
   await updatePlatformProjectYaml(version.name, version.code);
 
