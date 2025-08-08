@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:app_tools/models/models.dart';
 import 'package:app_tools/printer.dart';
-import 'package:app_tools/worker.dart';
 import 'package:args/args.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:yaml/yaml.dart';
@@ -59,13 +58,11 @@ void readConfigFile(File file) {
 }
 
 void updateConfigFile(File file) {
-
   final yamlEditor = YamlEditor(file.readAsStringSync());
 
   platforms.forEach((key, value) {
     yamlEditor.update([key], value.toJson());
   });
-
 
   file.writeAsStringSync(yamlEditor.toString());
 }
@@ -105,7 +102,11 @@ String platformKey(String platform, {String? flavor}) {
   return '$flavor:$platform';
 }
 
-Version generateVersion(String platform, {String? flavor}) {
+Version generateVersion(
+  String platform, {
+  String? flavor,
+  String? wantedVersionName,
+}) {
   final key = platformKey(platform, flavor: flavor);
 
   if (!platforms.containsKey(key)) {
@@ -114,10 +115,10 @@ Version generateVersion(String platform, {String? flavor}) {
 
   final version = platforms[key]!;
 
-  final versionName = updateVersionName(version);
+  final versionName = wantedVersionName ?? updateVersionName(version);
   final versionCode = updateVersionCode(version);
 
-   platforms[key] =  platforms[key]!.copyWith(
+  platforms[key] = platforms[key]!.copyWith(
     version: '$versionName+$versionCode',
   );
 
@@ -136,9 +137,9 @@ void initVersionFile() {
   final availablePlatforms = <String, Map<String, dynamic>>{};
 
   for (final platform in _defaultPlatforms) {
-    // if (Directory(platform).existsSync()) {
-    availablePlatforms[platform] = const Version().toJson();
-    // }
+    if (Directory(platform).existsSync()) {
+      availablePlatforms[platform] = const Version().toJson();
+    }
   }
 
   yamlEditor.update([], availablePlatforms);
@@ -158,6 +159,7 @@ void main(List<String> args) async {
       defaultsTo: '.versions.yaml',
     )
     ..addOption('flavor', abbr: 'f')
+    ..addOption('version-name', abbr: 'v', help: 'Version name')
     ..addFlag('verbose')
     ..addFlag('init')
     ..addFlag('help');
@@ -179,8 +181,7 @@ void main(List<String> args) async {
   /// Read File
   readConfigFile(versionFile);
 
-
-
+  final versionName = arguments.option('version-name');
   final platform = arguments.option('platform');
   final flavor = arguments.option('flavor');
 
@@ -188,8 +189,11 @@ void main(List<String> args) async {
     throw Exception('Platform is not specified');
   }
 
-  final version = generateVersion(platform, flavor: flavor);
-
+  final version = generateVersion(
+    platform,
+    flavor: flavor,
+    wantedVersionName: versionName,
+  );
 
   Printer.write('');
   Printer.info('*' * 60);
