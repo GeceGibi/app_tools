@@ -215,7 +215,7 @@ void main(List<String> args) async {
     ..addFlag('minor', help: 'Increment minor version')
     ..addFlag('major', help: 'Increment major version')
     ..addFlag('patch', help: 'Increment patch version')
-    ..addFlag('increment-code', help: 'Increment code version')
+    ..addFlag('increment-version-code', help: 'Increment code version')
     ..addFlag('verbose')
     ..addFlag('init', help: 'Initialize version file')
     ..addFlag('help');
