@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Version {
 
- String get version;@FormatParser() String get format; bool get autoIncrement;
+ String get version;@FormatParser() String get format;
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $VersionCopyWith<Version> get copyWith => _$VersionCopyWithImpl<Version>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Version&&(identical(other.version, version) || other.version == version)&&(identical(other.format, format) || other.format == format)&&(identical(other.autoIncrement, autoIncrement) || other.autoIncrement == autoIncrement));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Version&&(identical(other.version, version) || other.version == version)&&(identical(other.format, format) || other.format == format));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,version,format,autoIncrement);
+int get hashCode => Object.hash(runtimeType,version,format);
 
 @override
 String toString() {
-  return 'Version(version: $version, format: $format, autoIncrement: $autoIncrement)';
+  return 'Version(version: $version, format: $format)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $VersionCopyWith<$Res>  {
   factory $VersionCopyWith(Version value, $Res Function(Version) _then) = _$VersionCopyWithImpl;
 @useResult
 $Res call({
- String version,@FormatParser() String format, bool autoIncrement
+ String version,@FormatParser() String format
 });
 
 
@@ -65,12 +65,11 @@ class _$VersionCopyWithImpl<$Res>
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? version = null,Object? format = null,Object? autoIncrement = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? version = null,Object? format = null,}) {
   return _then(_self.copyWith(
 version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,format: null == format ? _self.format : format // ignore: cast_nullable_to_non_nullable
-as String,autoIncrement: null == autoIncrement ? _self.autoIncrement : autoIncrement // ignore: cast_nullable_to_non_nullable
-as bool,
+as String,
   ));
 }
 
@@ -155,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version, @FormatParser()  String format,  bool autoIncrement)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version, @FormatParser()  String format)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
-return $default(_that.version,_that.format,_that.autoIncrement);case _:
+return $default(_that.version,_that.format);case _:
   return orElse();
 
 }
@@ -176,10 +175,10 @@ return $default(_that.version,_that.format,_that.autoIncrement);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version, @FormatParser()  String format,  bool autoIncrement)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version, @FormatParser()  String format)  $default,) {final _that = this;
 switch (_that) {
 case _Version():
-return $default(_that.version,_that.format,_that.autoIncrement);case _:
+return $default(_that.version,_that.format);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +195,10 @@ return $default(_that.version,_that.format,_that.autoIncrement);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version, @FormatParser()  String format,  bool autoIncrement)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version, @FormatParser()  String format)?  $default,) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
-return $default(_that.version,_that.format,_that.autoIncrement);case _:
+return $default(_that.version,_that.format);case _:
   return null;
 
 }
@@ -211,12 +210,11 @@ return $default(_that.version,_that.format,_that.autoIncrement);case _:
 @JsonSerializable()
 
 class _Version extends Version {
-  const _Version({this.version = '0.0.1+0', @FormatParser() this.format = '1yyMMdd', this.autoIncrement = false}): super._();
+  const _Version({this.version = '0.0.1+0', @FormatParser() this.format = '#.#.#+1yyMMdd'}): super._();
   factory _Version.fromJson(Map<String, dynamic> json) => _$VersionFromJson(json);
 
 @override@JsonKey() final  String version;
 @override@JsonKey()@FormatParser() final  String format;
-@override@JsonKey() final  bool autoIncrement;
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Version&&(identical(other.version, version) || other.version == version)&&(identical(other.format, format) || other.format == format)&&(identical(other.autoIncrement, autoIncrement) || other.autoIncrement == autoIncrement));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Version&&(identical(other.version, version) || other.version == version)&&(identical(other.format, format) || other.format == format));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,version,format,autoIncrement);
+int get hashCode => Object.hash(runtimeType,version,format);
 
 @override
 String toString() {
-  return 'Version(version: $version, format: $format, autoIncrement: $autoIncrement)';
+  return 'Version(version: $version, format: $format)';
 }
 
 
@@ -251,7 +249,7 @@ abstract mixin class _$VersionCopyWith<$Res> implements $VersionCopyWith<$Res> {
   factory _$VersionCopyWith(_Version value, $Res Function(_Version) _then) = __$VersionCopyWithImpl;
 @override @useResult
 $Res call({
- String version,@FormatParser() String format, bool autoIncrement
+ String version,@FormatParser() String format
 });
 
 
@@ -268,12 +266,11 @@ class __$VersionCopyWithImpl<$Res>
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? version = null,Object? format = null,Object? autoIncrement = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? version = null,Object? format = null,}) {
   return _then(_Version(
 version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,format: null == format ? _self.format : format // ignore: cast_nullable_to_non_nullable
-as String,autoIncrement: null == autoIncrement ? _self.autoIncrement : autoIncrement // ignore: cast_nullable_to_non_nullable
-as bool,
+as String,
   ));
 }
 

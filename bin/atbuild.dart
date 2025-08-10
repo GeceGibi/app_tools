@@ -20,18 +20,58 @@ final _defaultPlatforms = [
 final String cwd = Directory.current.path;
 final platforms = <String, Version>{};
 
-String updateVersionName(Version version) {
-  // TODO: Implement version name upgrade logic
+String updateVersionName(
+  Version version, {
+  bool patch = false,
+  bool minor = false,
+  bool major = false,
+}) {
+  if (patch || minor || major) {
+    final formatSegments = version.formatName.split('.');
+    final nameSegments = version.name.split('.');
+
+    if (formatSegments.length != nameSegments.length) {
+      throw Exception('Version format is not valid');
+    }
+
+    if (patch) {
+      final newPatch = '${int.parse(nameSegments[2]) + 1}';
+      print([newPatch.length, formatSegments[2]]);
+
+      if (newPatch.length > formatSegments[2].length) {
+        nameSegments[2] = '0';
+        nameSegments[1] = '${int.parse(nameSegments[1]) + 1}';
+      } else {
+        nameSegments[2] = newPatch;
+      }
+    }
+    ///
+    else if (minor) {
+      final newMinor = '${int.parse(nameSegments[1]) + 1}';
+
+      if (newMinor.length > formatSegments[1].length) {
+        nameSegments[1] = '0';
+        nameSegments[0] = '${int.parse(nameSegments[0]) + 1}';
+      } else {
+        nameSegments[1] = newMinor;
+      }
+    } else if (major) {
+      nameSegments[0] = '${int.parse(nameSegments[0]) + 1}';
+    }
+
+    return nameSegments.join('.');
+  }
+
   return version.name;
 }
 
-int updateVersionCode(Version version) {
+int updateVersionCode(Version version, {bool incrementCode = false}) {
   final now = DateTime.now();
-  final dateFormat = DateFormat(version.format);
+  final dateFormat = DateFormat(version.formatCode);
 
   var versionCode = int.parse(dateFormat.format(now));
 
-  if (version.autoIncrement && versionCode <= version.code) {
+  if (incrementCode && versionCode <= version.code) {
     versionCode = version.code + 1;
   }
 
@@ -106,6 +146,10 @@ Version generateVersion(
   String platform, {
   String? flavor,
   String? wantedVersionName,
+  bool patch = false,
+  bool minor = false,
+  bool major = false,
+  bool incrementCode = false,
 }) {
   final key = platformKey(platform, flavor: flavor);
 
@@ -115,8 +159,16 @@ Version generateVersion(
 
   final version = platforms[key]!;
 
-  final versionName = wantedVersionName ?? updateVersionName(version);
-  final versionCode = updateVersionCode(version);
+  final versionName =
+      wantedVersionName ??
+      updateVersionName(
+        version,
+        patch: patch,
+        minor: minor,
+        major: major,
+      );
+
+  final versionCode = updateVersionCode(version, incrementCode: incrementCode);
 
   platforms[key] = platforms[key]!.copyWith(
     version: '$versionName+$versionCode',
@@ -152,16 +204,20 @@ void initVersionFile() {
 
 void main(List<String> args) async {
   final parser = ArgParser()
-    ..addOption('platform', abbr: 'p', help: 'Update version for platform')
+    ..addOption('platform', abbr: 'p', help: 'Platform name')
     ..addOption(
       'file',
       help: '.versions.yaml path',
       defaultsTo: '.versions.yaml',
     )
-    ..addOption('flavor', abbr: 'f')
+    ..addOption('flavor', abbr: 'f', help: 'Flavor name')
     ..addOption('version-name', abbr: 'v', help: 'Version name')
+    ..addFlag('minor', help: 'Increment minor version')
+    ..addFlag('major', help: 'Increment major version')
+    ..addFlag('patch', help: 'Increment patch version')
+    ..addFlag('increment-code', help: 'Increment code version')
     ..addFlag('verbose')
-    ..addFlag('init')
+    ..addFlag('init', help: 'Initialize version file')
     ..addFlag('help');
 
   final arguments = parser.parse(args);
@@ -193,6 +249,10 @@ void main(List<String> args) async {
     platform,
     flavor: flavor,
     wantedVersionName: versionName,
+    patch: arguments.flag('patch'),
+    minor: arguments.flag('minor'),
+    major: arguments.flag('major'),
+    incrementCode: arguments.flag('increment-code'),
   );
 
   Printer.write('');

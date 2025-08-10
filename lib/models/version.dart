@@ -8,8 +8,7 @@ part 'version.freezed.dart';
 abstract class Version with _$Version {
   const factory Version({
     @Default('0.0.1+0') String version,
-    @FormatParser() @Default('1yyMMdd') String format,
-    @Default(false) bool autoIncrement,
+    @FormatParser() @Default('#.#.#+1yyMMdd') String format,
   }) = _Version;
 
   factory Version.fromJson(Map<String, dynamic> json) =>
@@ -19,4 +18,7 @@ abstract class Version with _$Version {
 
   String get name => version.split('+').first;
   int get code => int.parse(version.split('+').last);
+
+  String get formatName => format.split('+').first;
+  String get formatCode => format.split('+').last;
 }
