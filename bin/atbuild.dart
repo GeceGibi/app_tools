@@ -255,7 +255,7 @@ void main(List<String> args) async {
     patch: arguments.flag('patch'),
     minor: arguments.flag('minor'),
     major: arguments.flag('major'),
-    incrementCode: arguments.flag('increment-code'),
+    incrementCode: arguments.flag('increment-version-code'),
   );
 
   Printer.write('');
