@@ -36,7 +36,6 @@ String updateVersionName(
 
     if (patch) {
       final newPatch = '${int.parse(nameSegments[2]) + 1}';
-      print([newPatch.length, formatSegments[2]]);
 
       if (newPatch.length > formatSegments[2].length) {
         nameSegments[2] = '0';
@@ -56,7 +55,11 @@ String updateVersionName(
         nameSegments[1] = newMinor;
       }
     } else if (major) {
-      nameSegments[0] = '${int.parse(nameSegments[0]) + 1}';
+      final newMajor = '${int.parse(nameSegments[0]) + 1}';
+
+      if (newMajor.length <= formatSegments[0].length) {
+        nameSegments[0] = newMajor;
+      }
     }
 
     return nameSegments.join('.');
