@@ -153,6 +153,7 @@ Version generateVersion(
   bool minor = false,
   bool major = false,
   bool incrementCode = false,
+  bool apply = false,
 }) {
   final key = platformKey(platform, flavor: flavor);
 
@@ -161,6 +162,10 @@ Version generateVersion(
   }
 
   final version = platforms[key]!;
+
+  if (apply) {
+    return version;
+  }
 
   final versionName =
       wantedVersionName ??
@@ -219,6 +224,7 @@ void main(List<String> args) async {
     ..addFlag('major', help: 'Increment major version')
     ..addFlag('patch', help: 'Increment patch version')
     ..addFlag('increment-version-code', help: 'Increment code version')
+    ..addFlag('apply', help: 'Apply the version to the project')
     ..addFlag('verbose')
     ..addFlag('init', help: 'Initialize version file')
     ..addFlag('help');
@@ -256,6 +262,7 @@ void main(List<String> args) async {
     minor: arguments.flag('minor'),
     major: arguments.flag('major'),
     incrementCode: arguments.flag('increment-version-code'),
+    apply: arguments.flag('apply'),
   );
 
   Printer.write('');
@@ -270,5 +277,7 @@ void main(List<String> args) async {
   await updatePlatformProjectYaml(version.name, version.code);
 
   /// if everything ok update the version file.
-  updateConfigFile(versionFile);
+  if (!arguments.flag('apply')) {
+    updateConfigFile(versionFile);
+  }
 }
