@@ -213,7 +213,7 @@ void main(List<String> args) async {
     flavor,
   );
 
-  var parsedTag = <String, String>{
+  var payload = <String, String>{
     'versionName': '1.0.0',
     'versionCode': '1',
     'platform': platform,
@@ -222,19 +222,19 @@ void main(List<String> args) async {
   };
 
   if (foundedTag.isNotEmpty) {
-    parsedTag = parseTagByTemplate(config.formats.tag, foundedTag);
+    payload = parseTagByTemplate(config.formats.tag, foundedTag);
   }
 
   final versionCode = generateVersionCode(
     config: config,
     platform: platform,
-    versionCode: int.parse(parsedTag['versionCode']!),
+    versionCode: int.parse(payload['versionCode']!),
   );
 
   final versionName = generateVersionName(
     config: config,
     platform: platform,
-    versionName: parsedTag['versionName']!,
+    versionName: payload['versionName']!,
     patch: arguments.flag('patch'),
     minor: arguments.flag('minor'),
     major: arguments.flag('major'),
@@ -244,7 +244,7 @@ void main(List<String> args) async {
     return switch (variable) {
       'versionName' => versionName,
       'versionCode' => '$versionCode',
-      _ => parsedTag[variable]!,
+      _ => payload[variable]!,
     };
   });
 
@@ -259,7 +259,12 @@ void main(List<String> args) async {
   Printer.write('');
 
   if (!arguments.flag('dry-run')) {
-    exportEnv(config: config, tag: newTag);
+    exportEnv(
+      config: config,
+      tag: newTag,
+      versionName: versionName,
+      versionCode: '$versionCode',
+    );
   }
 }
 
@@ -279,21 +284,27 @@ Versioning readConfigFile() {
   return Versioning.fromJson(configJson.cast());
 }
 
-void exportEnv({required Versioning config, required String tag}) {
+void exportEnv({
+  required Versioning config,
+  required String tag,
+  required String versionName,
+  required String versionCode,
+}) {
   /// Github
   final envFile = Platform.environment['GITHUB_ENV'];
 
   Printer.info('Github Env: $envFile');
   if (envFile != null) {
     File(envFile).writeAsStringSync(
-      '${config.exportEnvName}=$tag\n',
+      '${config.exportEnvName}=$tag\nVERSION_NAME=$versionName\nVERSION_CODE=$versionCode\n',
       mode: FileMode.append,
     );
   }
 
   /// Azure
   Printer.info('Exporting to Azure: ${config.exportEnvName}=$tag');
-  stdout.writeln(
-    '##vso[task.setvariable variable=${config.exportEnvName}]$tag',
-  );
+  stdout
+    ..writeln('##vso[task.setvariable variable=${config.exportEnvName}]$tag')
+    ..writeln('##vso[task.setvariable variable=VERSION_NAME]$versionName')
+    ..writeln('##vso[task.setvariable variable=VERSION_CODE]$versionCode');
 }
