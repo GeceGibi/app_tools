@@ -4,20 +4,42 @@ part 'version.g.dart';
 part 'version.freezed.dart';
 
 @freezed
-abstract class Version with _$Version {
-  const factory Version({
-    @Default('0.0.1+0') String version,
-    @Default('#.#.#+1yyMMdd') String format,
-  }) = _Version;
+abstract class Versioning with _$Versioning {
+  const factory Versioning({
+    @JsonKey(name: 'export-env-name') @Default('LATEST_VERSION_TAG')
+    String exportEnvName,
+    @Default(VersioningFormat()) VersioningFormat formats,
+  }) = _Versioning;
 
-  factory Version.fromJson(Map<String, dynamic> json) =>
-      _$VersionFromJson(json);
+  factory Versioning.fromJson(Map<String, dynamic> json) =>
+      _$VersioningFromJson(json);
+}
 
-  const Version._();
+@freezed
+abstract class VersioningFormat with _$VersioningFormat {
+  const factory VersioningFormat({
+    @Default('v{versionName}-{platform}-{stage}-{flavor}-{versionCode}')
+    String tag,
 
-  String get name => version.split('+').first;
-  int get code => int.parse(version.split('+').last);
+    /// version-name:
+    ///   - any: d.dd.dd
+    ///   - ios: d.dd.dd
+    ///   - android: d.dd.dd
+    ///   - custom: d.dd.d
+    @JsonKey(name: 'version-name')
+    @Default([])
+    List<Map<String, String>> versionName,
 
-  String get formatName => format.split('+').first;
-  String get formatCode => format.split('+').last;
+    /// version-code:
+    ///   - any: 1yyMMddHH
+    ///   - ios: 1yyMMdd
+    ///   - android: 1yyMMddHH
+    ///   - custom: 1yyMMddHH
+    @JsonKey(name: 'version-code')
+    @Default([])
+    List<Map<String, String>> versionCode,
+  }) = _VersioningFormat;
+
+  factory VersioningFormat.fromJson(Map<String, dynamic> json) =>
+      _$VersioningFormatFromJson(json);
 }

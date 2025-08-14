@@ -1,0 +1,7 @@
+export-env-name: LATEST_VERSION_TAG
+formats:
+  tag: v{versionName}-{platform}-{stage}-{flavor}-{versionCode}
+  version-name: 
+    - any: d.d.d
+  version-code: 
+    - android: 1yyMMddHH
