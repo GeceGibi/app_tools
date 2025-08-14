@@ -129,20 +129,9 @@ int generateVersionCode({
 }
 
 void initVersionFile() {
-  final file = File('$cwd/versioning.yaml');
-
-  if (file.existsSync()) {
-    Printer.warning('Version file already exist.');
-    return;
-  }
-
-  final yamlEditor = YamlEditor('');
-  final availablePlatforms = <String, Map<String, dynamic>>{};
-
-  yamlEditor.update([], availablePlatforms);
-  file
-    ..createSync(recursive: true)
-    ..writeAsStringSync(yamlEditor.toString());
+  final file = File('$cwd/versioning.yaml')..createSync(recursive: true);
+  final yamlEditor = YamlEditor('')..update([], const Versioning().toJson());
+  file.writeAsStringSync(yamlEditor.toString());
 }
 
 Future<String> getLatestTag(
@@ -191,6 +180,7 @@ void main(List<String> args) async {
     ..addFlag('patch', help: 'Increment patch version')
     ///
     ..addFlag('dry-run', help: 'Dry run')
+    ..addFlag('init', help: 'Initialize version file')
     ..addFlag('verbose')
     ..addFlag('help');
 
@@ -198,6 +188,11 @@ void main(List<String> args) async {
 
   if (arguments.flag('help')) {
     Printer.write(parser.usage);
+    return;
+  }
+
+  if (arguments.flag('init')) {
+    initVersionFile();
     return;
   }
 
@@ -272,10 +267,7 @@ Versioning readConfigFile() {
   final file = File('$cwd/versioning.yaml');
 
   if (!file.existsSync()) {
-    file.createSync(recursive: true);
-
-    final yamlEditor = YamlEditor('')..update([], const Versioning().toJson());
-    file.writeAsStringSync(yamlEditor.toString());
+    initVersionFile();
   }
 
   final yamlFile = loadYaml(file.readAsStringSync()) as YamlMap;
