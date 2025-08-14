@@ -306,9 +306,9 @@ void exportEnv({
 
   /// Azure
   final azureEnv = [
-    '##vso[task.setvariable variable=${config.envName}]$tag',
-    '##vso[task.setvariable variable=VERSION_NAME]$versionName',
-    '##vso[task.setvariable variable=VERSION_CODE]$versionCode',
+    '##vso[task.setvariable variable=${config.envName};isOutput=true]$tag',
+    '##vso[task.setvariable variable=VERSION_NAME;isOutput=true]$versionName',
+    '##vso[task.setvariable variable=VERSION_CODE;isOutput=true]$versionCode',
   ];
 
   for (final env in azureEnv) {
