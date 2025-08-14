@@ -290,10 +290,10 @@ void exportEnv({
   required String versionName,
   required String versionCode,
 }) {
-  final gthubEnv = [
-    '${config.envName}=$tag',
-    'VERSION_NAME=$versionName',
-    'VERSION_CODE=$versionCode',
+  final env = [
+    [config.envName, tag],
+    ['VERSION_NAME', versionName],
+    ['VERSION_CODE', versionCode],
   ];
 
   /// Github
@@ -301,18 +301,17 @@ void exportEnv({
 
   Printer.info('Github Env: $envFile');
   if (envFile != null) {
-    File(envFile).writeAsStringSync(gthubEnv.join('\n'), mode: FileMode.append);
+    File(envFile).writeAsStringSync(
+      env.map((e) => '${e[0]}=${e[1]}').join('\n'),
+      mode: FileMode.append,
+    );
   }
 
   /// Azure
-  final azureEnv = [
-    '##vso[task.setvariable variable=${config.envName};isOutput=true]$tag',
-    '##vso[task.setvariable variable=VERSION_NAME;isOutput=true]$versionName',
-    '##vso[task.setvariable variable=VERSION_CODE;isOutput=true]$versionCode',
-  ];
+  final azureEnv = env.map((e) => '${e[0]}]${e[1]}');
 
   for (final env in azureEnv) {
     Printer.info('Azure Env: $env');
-    print(env);
+    print('##vso[task.setvariable variable=$env');
   }
 }
