@@ -311,9 +311,8 @@ void exportEnv({
     '##vso[task.setvariable variable=VERSION_CODE]$versionCode',
   ];
 
-  Printer.info('Exporting to Azure: ${config.envName}=$tag');
-
   for (final env in azureEnv) {
+    Printer.info('Azure Env: $env');
     print(env);
   }
 }
