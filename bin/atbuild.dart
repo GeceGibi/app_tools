@@ -296,15 +296,15 @@ void exportEnv({
   Printer.info('Github Env: $envFile');
   if (envFile != null) {
     File(envFile).writeAsStringSync(
-      '${config.exportEnvName}=$tag\nVERSION_NAME=$versionName\nVERSION_CODE=$versionCode\n',
+      '${config.envName}=$tag\nVERSION_NAME=$versionName\nVERSION_CODE=$versionCode\n',
       mode: FileMode.append,
     );
   }
 
   /// Azure
-  Printer.info('Exporting to Azure: ${config.exportEnvName}=$tag');
+  Printer.info('Exporting to Azure: ${config.envName}=$tag');
   stdout
-    ..writeln('##vso[task.setvariable variable=${config.exportEnvName}]$tag')
+    ..writeln('##vso[task.setvariable variable=${config.envName}]$tag')
     ..writeln('##vso[task.setvariable variable=VERSION_NAME]$versionName')
     ..writeln('##vso[task.setvariable variable=VERSION_CODE]$versionCode');
 }

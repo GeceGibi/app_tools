@@ -1,4 +1,4 @@
-export-env-name: LATEST_VERSION_TAG
+env-name: VERSION_TAG
 formats:
   tag: v{versionName}-{platform}-{stage}-{flavor}-{versionCode}
   version-name: 

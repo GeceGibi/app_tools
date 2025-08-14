@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Versioning {
 
-@JsonKey(name: 'export-env-name') String get exportEnvName; VersioningFormat get formats;
+@JsonKey(name: 'export-env-name') String get envName; VersioningFormat get formats;
 /// Create a copy of Versioning
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $VersioningCopyWith<Versioning> get copyWith => _$VersioningCopyWithImpl<Version
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Versioning&&(identical(other.exportEnvName, exportEnvName) || other.exportEnvName == exportEnvName)&&(identical(other.formats, formats) || other.formats == formats));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Versioning&&(identical(other.envName, envName) || other.envName == envName)&&(identical(other.formats, formats) || other.formats == formats));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,exportEnvName,formats);
+int get hashCode => Object.hash(runtimeType,envName,formats);
 
 @override
 String toString() {
-  return 'Versioning(exportEnvName: $exportEnvName, formats: $formats)';
+  return 'Versioning(envName: $envName, formats: $formats)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $VersioningCopyWith<$Res>  {
   factory $VersioningCopyWith(Versioning value, $Res Function(Versioning) _then) = _$VersioningCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'export-env-name') String exportEnvName, VersioningFormat formats
+@JsonKey(name: 'export-env-name') String envName, VersioningFormat formats
 });
 
 
@@ -65,9 +65,9 @@ class _$VersioningCopyWithImpl<$Res>
 
 /// Create a copy of Versioning
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? exportEnvName = null,Object? formats = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? envName = null,Object? formats = null,}) {
   return _then(_self.copyWith(
-exportEnvName: null == exportEnvName ? _self.exportEnvName : exportEnvName // ignore: cast_nullable_to_non_nullable
+envName: null == envName ? _self.envName : envName // ignore: cast_nullable_to_non_nullable
 as String,formats: null == formats ? _self.formats : formats // ignore: cast_nullable_to_non_nullable
 as VersioningFormat,
   ));
@@ -163,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'export-env-name')  String exportEnvName,  VersioningFormat formats)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'export-env-name')  String envName,  VersioningFormat formats)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Versioning() when $default != null:
-return $default(_that.exportEnvName,_that.formats);case _:
+return $default(_that.envName,_that.formats);case _:
   return orElse();
 
 }
@@ -184,10 +184,10 @@ return $default(_that.exportEnvName,_that.formats);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'export-env-name')  String exportEnvName,  VersioningFormat formats)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'export-env-name')  String envName,  VersioningFormat formats)  $default,) {final _that = this;
 switch (_that) {
 case _Versioning():
-return $default(_that.exportEnvName,_that.formats);case _:
+return $default(_that.envName,_that.formats);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -204,10 +204,10 @@ return $default(_that.exportEnvName,_that.formats);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'export-env-name')  String exportEnvName,  VersioningFormat formats)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'export-env-name')  String envName,  VersioningFormat formats)?  $default,) {final _that = this;
 switch (_that) {
 case _Versioning() when $default != null:
-return $default(_that.exportEnvName,_that.formats);case _:
+return $default(_that.envName,_that.formats);case _:
   return null;
 
 }
@@ -219,10 +219,10 @@ return $default(_that.exportEnvName,_that.formats);case _:
 @JsonSerializable()
 
 class _Versioning implements Versioning {
-  const _Versioning({@JsonKey(name: 'export-env-name') this.exportEnvName = 'LATEST_VERSION_TAG', this.formats = const VersioningFormat()});
+  const _Versioning({@JsonKey(name: 'export-env-name') this.envName = 'VERSION_TAG', this.formats = const VersioningFormat()});
   factory _Versioning.fromJson(Map<String, dynamic> json) => _$VersioningFromJson(json);
 
-@override@JsonKey(name: 'export-env-name') final  String exportEnvName;
+@override@JsonKey(name: 'export-env-name') final  String envName;
 @override@JsonKey() final  VersioningFormat formats;
 
 /// Create a copy of Versioning
@@ -238,16 +238,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Versioning&&(identical(other.exportEnvName, exportEnvName) || other.exportEnvName == exportEnvName)&&(identical(other.formats, formats) || other.formats == formats));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Versioning&&(identical(other.envName, envName) || other.envName == envName)&&(identical(other.formats, formats) || other.formats == formats));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,exportEnvName,formats);
+int get hashCode => Object.hash(runtimeType,envName,formats);
 
 @override
 String toString() {
-  return 'Versioning(exportEnvName: $exportEnvName, formats: $formats)';
+  return 'Versioning(envName: $envName, formats: $formats)';
 }
 
 
@@ -258,7 +258,7 @@ abstract mixin class _$VersioningCopyWith<$Res> implements $VersioningCopyWith<$
   factory _$VersioningCopyWith(_Versioning value, $Res Function(_Versioning) _then) = __$VersioningCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'export-env-name') String exportEnvName, VersioningFormat formats
+@JsonKey(name: 'export-env-name') String envName, VersioningFormat formats
 });
 
 
@@ -275,9 +275,9 @@ class __$VersioningCopyWithImpl<$Res>
 
 /// Create a copy of Versioning
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? exportEnvName = null,Object? formats = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? envName = null,Object? formats = null,}) {
   return _then(_Versioning(
-exportEnvName: null == exportEnvName ? _self.exportEnvName : exportEnvName // ignore: cast_nullable_to_non_nullable
+envName: null == envName ? _self.envName : envName // ignore: cast_nullable_to_non_nullable
 as String,formats: null == formats ? _self.formats : formats // ignore: cast_nullable_to_non_nullable
 as VersioningFormat,
   ));

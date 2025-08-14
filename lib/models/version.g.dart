@@ -7,7 +7,7 @@ part of 'version.dart';
 // **************************************************************************
 
 _Versioning _$VersioningFromJson(Map<String, dynamic> json) => _Versioning(
-  exportEnvName: json['export-env-name'] as String? ?? 'LATEST_VERSION_TAG',
+  envName: json['export-env-name'] as String? ?? 'VERSION_TAG',
   formats: json['formats'] == null
       ? const VersioningFormat()
       : VersioningFormat.fromJson(json['formats'] as Map<String, dynamic>),
@@ -15,7 +15,7 @@ _Versioning _$VersioningFromJson(Map<String, dynamic> json) => _Versioning(
 
 Map<String, dynamic> _$VersioningToJson(_Versioning instance) =>
     <String, dynamic>{
-      'export-env-name': instance.exportEnvName,
+      'export-env-name': instance.envName,
       'formats': instance.formats.toJson(),
     };
 

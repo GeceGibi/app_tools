@@ -6,8 +6,8 @@ part 'version.freezed.dart';
 @freezed
 abstract class Versioning with _$Versioning {
   const factory Versioning({
-    @JsonKey(name: 'export-env-name') @Default('LATEST_VERSION_TAG')
-    String exportEnvName,
+    @JsonKey(name: 'export-env-name') @Default('VERSION_TAG')
+    String envName,
     @Default(VersioningFormat()) VersioningFormat formats,
   }) = _Versioning;
 
