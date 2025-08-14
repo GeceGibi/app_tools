@@ -290,21 +290,30 @@ void exportEnv({
   required String versionName,
   required String versionCode,
 }) {
+  final gthubEnv = [
+    '${config.envName}=$tag',
+    'VERSION_NAME=$versionName',
+    'VERSION_CODE=$versionCode',
+  ];
+
   /// Github
   final envFile = Platform.environment['GITHUB_ENV'];
 
   Printer.info('Github Env: $envFile');
   if (envFile != null) {
-    File(envFile).writeAsStringSync(
-      '${config.envName}=$tag\nVERSION_NAME=$versionName\nVERSION_CODE=$versionCode\n',
-      mode: FileMode.append,
-    );
+    File(envFile).writeAsStringSync(gthubEnv.join('\n'), mode: FileMode.append);
   }
 
   /// Azure
+  final azureEnv = [
+    '##vso[task.setvariable variable=${config.envName}]$tag',
+    '##vso[task.setvariable variable=VERSION_NAME]$versionName',
+    '##vso[task.setvariable variable=VERSION_CODE]$versionCode',
+  ];
+
   Printer.info('Exporting to Azure: ${config.envName}=$tag');
-  stdout
-    ..writeln('##vso[task.setvariable variable=${config.envName}]$tag')
-    ..writeln('##vso[task.setvariable variable=VERSION_NAME]$versionName')
-    ..writeln('##vso[task.setvariable variable=VERSION_CODE]$versionCode');
+
+  for (final env in azureEnv) {
+    print(env);
+  }
 }
