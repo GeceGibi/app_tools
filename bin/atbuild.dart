@@ -296,22 +296,31 @@ void exportEnv({
     ['VERSION_CODE', versionCode],
   ];
 
-  /// Github
-  final envFile = Platform.environment['GITHUB_ENV'];
-
-  Printer.info('Github Env: $envFile');
-  if (envFile != null) {
-    File(envFile).writeAsStringSync(
+  final envFile = File('$cwd/.env')
+    ..createSync(recursive: true)
+    ..writeAsStringSync(
       env.map((e) => '${e[0]}=${e[1]}').join('\n'),
       mode: FileMode.append,
     );
-  }
 
-  /// Azure
-  final azureEnv = env.map((e) => '${e[0]}]${e[1]}');
+  print(envFile.readAsStringSync());
 
-  for (final env in azureEnv) {
-    Printer.info('Azure Env: $env');
-    print('##vso[task.setvariable variable=$env');
-  }
+  /// Github
+  // final envFile = Platform.environment['GITHUB_ENV'];
+
+  // Printer.info('Github Env: $envFile');
+  // if (envFile != null) {
+  //   File(envFile).writeAsStringSync(
+  //     env.map((e) => '${e[0]}=${e[1]}').join('\n'),
+  //     mode: FileMode.append,
+  //   );
+  // }
+
+  // /// Azure
+  // final azureEnv = env.map((e) => '${e[0]}]${e[1]}');
+
+  // for (final env in azureEnv) {
+  //   Printer.info('Azure Env: $env');
+  //   print('##vso[task.setvariable variable=$env');
+  // }
 }
