@@ -8,12 +8,10 @@ part of 'version.dart';
 
 _Version _$VersionFromJson(Map<String, dynamic> json) => _Version(
   version: json['version'] as String? ?? '0.0.1+0',
-  format: json['format'] == null
-      ? '#.#.#+1yyMMdd'
-      : const FormatParser().fromJson(json['format']),
+  format: json['format'] as String? ?? '#.#.#+1yyMMdd',
 );
 
 Map<String, dynamic> _$VersionToJson(_Version instance) => <String, dynamic>{
   'version': instance.version,
-  'format': const FormatParser().toJson(instance.format),
+  'format': instance.format,
 };

@@ -1,4 +1,3 @@
-import 'package:app_tools/models/models.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'version.g.dart';
@@ -8,7 +7,7 @@ part 'version.freezed.dart';
 abstract class Version with _$Version {
   const factory Version({
     @Default('0.0.1+0') String version,
-    @FormatParser() @Default('#.#.#+1yyMMdd') String format,
+    @Default('#.#.#+1yyMMdd') String format,
   }) = _Version;
 
   factory Version.fromJson(Map<String, dynamic> json) =>

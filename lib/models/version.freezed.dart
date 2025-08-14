@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Version {
 
- String get version;@FormatParser() String get format;
+ String get version; String get format;
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $VersionCopyWith<$Res>  {
   factory $VersionCopyWith(Version value, $Res Function(Version) _then) = _$VersionCopyWithImpl;
 @useResult
 $Res call({
- String version,@FormatParser() String format
+ String version, String format
 });
 
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version, @FormatParser()  String format)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version,  String format)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
 return $default(_that.version,_that.format);case _:
@@ -175,7 +175,7 @@ return $default(_that.version,_that.format);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version, @FormatParser()  String format)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version,  String format)  $default,) {final _that = this;
 switch (_that) {
 case _Version():
 return $default(_that.version,_that.format);case _:
@@ -195,7 +195,7 @@ return $default(_that.version,_that.format);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version, @FormatParser()  String format)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version,  String format)?  $default,) {final _that = this;
 switch (_that) {
 case _Version() when $default != null:
 return $default(_that.version,_that.format);case _:
@@ -210,11 +210,11 @@ return $default(_that.version,_that.format);case _:
 @JsonSerializable()
 
 class _Version extends Version {
-  const _Version({this.version = '0.0.1+0', @FormatParser() this.format = '#.#.#+1yyMMdd'}): super._();
+  const _Version({this.version = '0.0.1+0', this.format = '#.#.#+1yyMMdd'}): super._();
   factory _Version.fromJson(Map<String, dynamic> json) => _$VersionFromJson(json);
 
 @override@JsonKey() final  String version;
-@override@JsonKey()@FormatParser() final  String format;
+@override@JsonKey() final  String format;
 
 /// Create a copy of Version
 /// with the given fields replaced by the non-null parameter values.
@@ -249,7 +249,7 @@ abstract mixin class _$VersionCopyWith<$Res> implements $VersionCopyWith<$Res> {
   factory _$VersionCopyWith(_Version value, $Res Function(_Version) _then) = __$VersionCopyWithImpl;
 @override @useResult
 $Res call({
- String version,@FormatParser() String format
+ String version, String format
 });
 
 

@@ -1,0 +1,23 @@
+android:
+  version: 0.0.3+1250814
+  format: "#.#.#+1yyMMdd"
+
+web:
+  version: 0.0.1+0
+  format: "#.#.#+1yyMMdd"
+
+ios:
+  version: 0.0.1+0
+  format: "#.#.#+1yyMMdd"
+
+macos:
+  version: 0.0.1+0
+  format: "#.#.#+1yyMMdd"
+
+windows:
+  version: 0.0.1+0
+  format: "#.#.#+1yyMMdd"
+  
+linux:
+  version: 0.0.1+0
+  format: "#.#.#+1yyMMdd"
