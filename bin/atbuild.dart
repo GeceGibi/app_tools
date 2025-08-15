@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:app_tools/models/models.dart';
 import 'package:app_tools/printer.dart';
 import 'package:args/args.dart';
+import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
@@ -40,7 +41,7 @@ String generateTag(String format, String? Function(String variable) callback) {
     format = format.replaceFirst(match.group(0)!, replacement);
   }
 
-  return format;
+  return format.replaceAll('--', '-');
 }
 
 String generateVersionName({
@@ -239,7 +240,7 @@ void main(List<String> args) async {
     return switch (variable) {
       'versionName' => versionName,
       'versionCode' => '$versionCode',
-      _ => payload[variable]!,
+      _ => payload[variable],
     };
   });
 
@@ -282,18 +283,40 @@ void exportEnv({
   required String versionName,
   required String versionCode,
 }) {
+  final envFile = File('$cwd/.env');
   final env = [
     [config.envName, tag],
     ['VERSION_NAME', versionName],
     ['VERSION_CODE', versionCode],
   ];
 
-  final envFile = File('$cwd/.env')
-    ..createSync(recursive: true)
-    ..writeAsStringSync(
-      env.map((e) => '${e[0]}=${e[1]}').join('\n'),
-      mode: FileMode.append,
-    );
+  if (envFile.existsSync()) {
+    final lines = envFile.readAsLinesSync();
+
+    for (var i = 0; i < lines.length; i++) {
+      final line = lines[i];
+      final parts = line.split('=');
+
+      if (parts.length == 2) {
+        for (final entry in env) {
+          if (entry[0] == parts.first) {
+            parts[1] = entry[1];
+          }
+        }
+
+        lines[i] = parts.join('=');
+      }
+    }
+
+    envFile.writeAsStringSync(lines.join('\n'));
+  } else {
+    envFile
+      ..createSync(recursive: true)
+      ..writeAsStringSync(
+        env.map((e) => '${e[0]}=${e[1]}').join('\n'),
+        mode: FileMode.append,
+      );
+  }
 
   print(envFile.readAsStringSync());
 }
