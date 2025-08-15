@@ -23,7 +23,7 @@ _VersioningFormat _$VersioningFormatFromJson(Map<String, dynamic> json) =>
     _VersioningFormat(
       tag:
           json['tag'] as String? ??
-          'v{versionName}-{platform}-{stage}-{flavor}-{versionCode}',
+          'v{versionName}-{flavor}-{stage}-{platform}-{versionCode}',
       versionName:
           (json['version-name'] as List<dynamic>?)
               ?.map((e) => Map<String, String>.from(e as Map))

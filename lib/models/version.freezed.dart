@@ -505,7 +505,7 @@ return $default(_that.tag,_that.versionName,_that.versionCode);case _:
 @JsonSerializable()
 
 class _VersioningFormat implements VersioningFormat {
-  const _VersioningFormat({this.tag = 'v{versionName}-{platform}-{stage}-{flavor}-{versionCode}', @JsonKey(name: 'version-name') final  List<Map<String, String>> versionName = const [], @JsonKey(name: 'version-code') final  List<Map<String, String>> versionCode = const []}): _versionName = versionName,_versionCode = versionCode;
+  const _VersioningFormat({this.tag = 'v{versionName}-{flavor}-{stage}-{platform}-{versionCode}', @JsonKey(name: 'version-name') final  List<Map<String, String>> versionName = const [], @JsonKey(name: 'version-code') final  List<Map<String, String>> versionCode = const []}): _versionName = versionName,_versionCode = versionCode;
   factory _VersioningFormat.fromJson(Map<String, dynamic> json) => _$VersioningFormatFromJson(json);
 
 @override@JsonKey() final  String tag;

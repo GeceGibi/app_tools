@@ -18,7 +18,7 @@ abstract class Versioning with _$Versioning {
 @freezed
 abstract class VersioningFormat with _$VersioningFormat {
   const factory VersioningFormat({
-    @Default('v{versionName}-{platform}-{stage}-{flavor}-{versionCode}')
+    @Default('v{versionName}-{flavor}-{stage}-{platform}-{versionCode}')
     String tag,
 
     /// version-name:
