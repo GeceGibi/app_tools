@@ -4,12 +4,13 @@ import 'dart:io';
 import 'package:app_tools/models/models.dart';
 import 'package:app_tools/printer.dart';
 import 'package:args/args.dart';
-import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
 final String cwd = Directory.current.path;
+final versioningFile = File('$cwd/versioning.yaml');
+
 Map<String, String> parseTagByTemplate(String template, String tag) {
   final keyRe = RegExp(r'\{([^}]+)\}');
   final keys = keyRe.allMatches(template).map((m) => m.group(1)!).toList();
@@ -130,7 +131,7 @@ int generateVersionCode({
 }
 
 void initVersionFile() {
-  final file = File('$cwd/versioning.yaml')..createSync(recursive: true);
+  final file = versioningFile..createSync(recursive: true);
   final yamlEditor = YamlEditor('')..update([], const Versioning().toJson());
   file.writeAsStringSync(yamlEditor.toString());
 }
@@ -265,13 +266,11 @@ void main(List<String> args) async {
 }
 
 Versioning readConfigFile() {
-  final file = File('$cwd/versioning.yaml');
-
-  if (!file.existsSync()) {
+  if (!versioningFile.existsSync()) {
     initVersionFile();
   }
 
-  final yamlFile = loadYaml(file.readAsStringSync()) as YamlMap;
+  final yamlFile = loadYaml(versioningFile.readAsStringSync()) as YamlMap;
   final configJson = jsonDecode(jsonEncode(yamlFile.value)) as Map;
 
   return Versioning.fromJson(configJson.cast());
