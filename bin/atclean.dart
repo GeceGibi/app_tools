@@ -10,9 +10,18 @@ Future<void> main(List<String> args) async {
     ..addFlag('ios', abbr: 'i', defaultsTo: true)
     ..addFlag('freezed', abbr: 'f', defaultsTo: true)
     ..addFlag('l10n', abbr: 'l', defaultsTo: true)
+    ..addFlag('help', abbr: 'h')
     ..addFlag('verbose', abbr: 'v');
 
+
+
   final result = parser.parse(args);
+
+  if (result.flag('help')) {
+    Printer.info(parser.usage);
+    return;
+  }
+
   final pwd = Directory.current.path;
 
   final iosDir = Directory('$pwd/ios');
