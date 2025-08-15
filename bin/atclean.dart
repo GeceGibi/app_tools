@@ -7,6 +7,9 @@ import 'package:args/args.dart';
 Future<void> main(List<String> args) async {
   final parser = ArgParser()
     ..addFlag('clean', abbr: 'c', defaultsTo: true)
+    ..addFlag('ios', abbr: 'i', defaultsTo: true)
+    ..addFlag('freezed', abbr: 'f', defaultsTo: true)
+    ..addFlag('l10n', abbr: 'l', defaultsTo: true)
     ..addFlag('verbose', abbr: 'v');
 
   final result = parser.parse(args);
@@ -29,7 +32,7 @@ Future<void> main(List<String> args) async {
     ),
 
     ///! iOS
-    if (iosDir.existsSync()) ...[
+    if (result.flag('ios') && iosDir.existsSync()) ...[
       Work(
         description: 'Pod deintegrate',
         command: 'pod deintegrate',
@@ -60,7 +63,7 @@ Future<void> main(List<String> args) async {
     ),
 
     ///! iOS
-    if (iosDir.existsSync())
+    if (result.flag('ios') && iosDir.existsSync())
       Work(
         description: 'Pod install & update',
         command: 'pod install --repo-update',
@@ -68,15 +71,18 @@ Future<void> main(List<String> args) async {
       ),
 
     ///! Home
-    if (l10nConfig.existsSync())
+    if (result.flag('l10n') && l10nConfig.existsSync())
       Work(
         description: 'Generate L10N',
         command: 'flutter gen-l10n',
         pwd: pwd,
       ),
-    Work(
-      description: 'Generate Freezed Models',
-      command: 'dart run build_runner build --delete-conflicting-outputs',
+
+    ///! Freezed
+    if (result.flag('freezed'))
+      Work(
+        description: 'Generate Freezed Models',
+        command: 'dart run build_runner build --delete-conflicting-outputs',
       pwd: pwd,
     ),
   ];
