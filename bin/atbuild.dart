@@ -108,6 +108,7 @@ int generateVersionCode({
   required Versioning config,
   required int versionCode,
   required String platform,
+  bool autoBump = true,
 }) {
   var format = '1yyMMdd';
 
@@ -123,7 +124,7 @@ int generateVersionCode({
 
   var newVersionCode = int.parse(dateFormat.format(now));
 
-  if (newVersionCode <= versionCode) {
+  if (newVersionCode <= versionCode && autoBump) {
     newVersionCode = versionCode + 1;
   }
 
@@ -177,6 +178,12 @@ void main(List<String> args) async {
     ..addOption('stage', abbr: 's', help: 'Stage name', mandatory: true)
     ..addOption('flavor', abbr: 'f', help: 'Flavor name')
     ///
+    ..addFlag(
+      'auto-bump-version-code',
+      help: 'Auto bump version code',
+      defaultsTo: true,
+    )
+    ///
     ..addFlag('minor', help: 'Increment minor version')
     ..addFlag('major', help: 'Increment major version')
     ..addFlag('patch', help: 'Increment patch version')
@@ -226,6 +233,7 @@ void main(List<String> args) async {
     config: config,
     platform: platform,
     versionCode: int.parse(payload['versionCode']!),
+    autoBump: arguments.flag('auto-bump-version-code'),
   );
 
   final versionName = generateVersionName(
