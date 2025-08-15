@@ -281,29 +281,28 @@ void exportEnv({
   required String tag,
   required String versionName,
   required String versionCode,
+  bool checkEnv = true,
 }) {
   final envFile = File('$cwd/.env');
-  final env = [
-    [config.envName, tag],
-    ['VERSION_NAME', versionName],
-    ['VERSION_CODE', versionCode],
-  ];
+  final env = {
+    config.envName: tag,
+    'VERSION_NAME': versionName,
+    'VERSION_CODE': versionCode,
+  };
 
-  if (envFile.existsSync()) {
+  if (envFile.existsSync() && checkEnv) {
     final lines = envFile.readAsLinesSync();
-
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
       final parts = line.split('=');
 
       if (parts.length == 2) {
-        for (final entry in env) {
-          if (entry[0] == parts.first) {
-            parts[1] = entry[1];
+        for (final MapEntry(:key, :value) in env.entries) {
+          if (parts.first == key) {
+            lines[i] = '$key=$value';
+            break;
           }
         }
-
-        lines[i] = parts.join('=');
       }
     }
 
@@ -312,7 +311,7 @@ void exportEnv({
     envFile
       ..createSync(recursive: true)
       ..writeAsStringSync(
-        env.map((e) => '${e[0]}=${e[1]}').join('\n'),
+        env.entries.map((e) => '${e.key}=${e.value}').join('\n'),
         mode: FileMode.append,
       );
   }
