@@ -289,7 +289,6 @@ void exportEnv({
   required String tag,
   required String versionName,
   required String versionCode,
-  bool checkEnv = true,
 }) {
   final envFile = File('$cwd/.env');
   final env = {
@@ -298,31 +297,34 @@ void exportEnv({
     'VERSION_CODE': versionCode,
   };
 
-  if (envFile.existsSync() && checkEnv) {
+  final variables = <String, String>{};
+
+  if (envFile.existsSync()) {
     final lines = envFile.readAsLinesSync();
+
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
-      final parts = line.split('=');
 
-      if (parts.length == 2) {
-        for (final MapEntry(:key, :value) in env.entries) {
-          if (parts.first == key) {
-            lines[i] = '$key=$value';
-            break;
-          }
-        }
+      if (line.contains('=')) {
+        final parts = line.split('=');
+        variables[parts.first] = parts.last;
+      } else {
+        variables['#$i'] = line;
       }
     }
-
-    envFile.writeAsStringSync(lines.join('\n'));
-  } else {
-    envFile
-      ..createSync(recursive: true)
-      ..writeAsStringSync(
-        env.entries.map((e) => '${e.key}=${e.value}').join('\n'),
-        mode: FileMode.append,
-      );
   }
 
-  print(envFile.readAsStringSync());
+  for (final MapEntry(:key, :value) in env.entries) {
+    variables[key] = value;
+  }
+
+  final content = variables.entries.map((e) {
+    if (e.key.startsWith('#')) {
+      return e.value;
+    }
+
+    return '${e.key}=${e.value}';
+  });
+
+  envFile.writeAsStringSync(content.join('\n'));
 }
