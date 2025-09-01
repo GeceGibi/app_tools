@@ -1,8 +1,8 @@
 # App Tools
 
-Simple command-line tools suite for Flutter/Dart projects.
+Simple command-line tools for Flutter/Dart projects.
 
-**Repository:** https://github.com/GeceGibi/app_tools.git
+Repository: https://github.com/GeceGibi/app_tools.git
 
 ## Installation
 
@@ -10,77 +10,100 @@ Simple command-line tools suite for Flutter/Dart projects.
 dart pub global activate --source git https://github.com/GeceGibi/app_tools.git
 ```
 
-## Tools
+## Commands
+
+- atbuild — versioning and tag/ENV generation
+- atclean — project cleaning and regeneration tasks
 
 ### atbuild
-Used for project version management and build operations.
+Generates version info, finds/increments the latest matching git tag and writes to `.env`.
 
 ```bash
-# Initialize version file
-atbuild --init
-
-# For usage details
+# Help
 atbuild --help
 
-# Build iOS app
-atbuild -p ios -b
+# First-time setup (creates versioning.yaml)
+atbuild --init
 
-# Build Android App Bundle for Google Play
-atbuild -p google -b
+# Examples
+atbuild -p ios -s staging --patch
+atbuild -p android -s prod -f main --minor
 
-# Build APK for Huawei
-atbuild -p huawei -b
+# Dry run (no file write)
+atbuild -p ios -s dev --dry-run
 
-# Build with specific flavor
-atbuild -p ios -f staging -b
-
-# Build without code signing (iOS)
-atbuild -p ios -b -s
-
-# Clean build with obfuscation
-atbuild -p google -c -b -o
+# Disable auto bumping of versionCode
+atbuild -p android -s prod --no-auto-bump-version-code
 ```
 
-**Parameters:**
-- **-p, --platform**: Platform to build for (`ios`, `google`, `huawei`) - **Required**
-- **-f, --flavor**: Specify build flavor
-- **-b, --build**: Execute build process after version update
-- **-c, --clean**: Clean project before build
-- **-o, --obfuscate**: Enable code obfuscation (default: true)
-- **-s, --no-codesign**: Skip code signing (iOS only)
-- **--production**: Production build flag
-- **--init**: Initialize .versions.yaml file
-- **--file**: Custom .versions.yaml file path (default: .versions.yaml)
+Parameters:
+- -p, --platform: Platform name (e.g. `ios`, `android`) — required
+- -s, --stage: Stage name (e.g. `dev`, `staging`, `prod`) — required
+- -f, --flavor: Flavor name (optional)
+- --patch / --minor / --major: `versionName` bump type
+- --auto-bump-version-code: Auto-increment `versionCode` (default: true)
+- --dry-run: Compute only, do not write
+- --init: Create `versioning.yaml`
+- --verbose, --help
+
+Outputs:
+- Writes these variables into `.env`:
+  - `VERSION_NAME`, `VERSION_CODE`
+  - Tag variable named by `export-env-name` (default: `VERSION_TAG`)
+- Prints platform/version info and the generated tag.
+
+Version/Tag rules:
+- Finds the latest matching git tag and parses it; if none, starts with `1.0.0/1`.
+- `versionName`: bumped by `--patch | --minor | --major`; cascades when width overflows.
+- `versionCode`: date-based; if not greater than current and auto bump is on, increments by 1.
+- All rules are configurable via `versioning.yaml`.
+
+`versioning.yaml` example:
+
+```yaml
+export-env-name: VERSION_TAG
+formats:
+  tag: v{versionName}-{flavor}-{stage}-{platform}-{versionCode}
+  version-name:
+    - any: d.d.d
+  version-code:
+    - any: 1yyMMdd
+    - android: 1yyMMddHH
+```
+
+Notes:
+- Tag template variables: `{versionName}`, `{versionCode}`, `{platform}`, `{stage}`, `{flavor}`.
+- Operates with git tags in the repo; uses the pattern to get the latest tag.
 
 ### atclean
-Used for project cleaning and dependency reinstallation operations.
+Cleans the project and regenerates required artifacts.
 
 ```bash
-# Clean project and reinstall dependencies
+# Default flow (clean, pub get, iOS pods if present, l10n and freezed)
 atclean
 
-# Clean only (verbose mode)
+# Verbose output
 atclean -v
+
+# Also remove lock files
+atclean -lf
 ```
+
+Flags:
+- -c, --clean (default: true)
+- -i, --ios (default: true; runs pod steps if `ios` folder exists)
+- -f, --freezed (default: true; generates models via build_runner)
+- -l, --l10n (default: true; runs if `l10n.yaml` exists)
+- -lf, --lock-files (optional; removes `pubspec.lock` and `Podfile.lock`)
+- -v, --verbose; -h, --help
 
 ## Features
 
-- ✅ Automatic version management
-- ✅ Project cleaning and dependency management
-- ✅ Colorful terminal output
-- ✅ Detailed error reporting
-
-## Supported Platforms
-
-- 🍎 **iOS** - Build IPA files
-- 🤖 **Google Play** - Build App Bundle (*.aab) files  
-- 📱 **Huawei** - Build APK files
+- Automatic version and tag generation
+- Writes to `.env`
+- Project cleaning and dependency management
+- Colored, readable terminal output
 
 ## Requirements
 
 - Dart SDK 3.8.1+
-- Flutter (for atclean)
-
----
-
-**Version:** 1.1.0+25

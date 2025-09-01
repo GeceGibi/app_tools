@@ -10,10 +10,9 @@ Future<void> main(List<String> args) async {
     ..addFlag('ios', abbr: 'i', defaultsTo: true)
     ..addFlag('freezed', abbr: 'f', defaultsTo: true)
     ..addFlag('l10n', abbr: 'l', defaultsTo: true)
+    ..addFlag('lock-files', abbr: 'lf')
     ..addFlag('help', abbr: 'h')
     ..addFlag('verbose', abbr: 'v');
-
-
 
   final result = parser.parse(args);
 
@@ -34,11 +33,12 @@ Future<void> main(List<String> args) async {
         command: 'flutter clean',
         pwd: pwd,
       ),
-    Work(
-      description: 'Remove Pub Lock Project',
-      command: 'rm -rf pubspec.lock',
-      pwd: pwd,
-    ),
+    if (result.flag('lock-files'))
+      Work(
+        description: 'Remove Pub Lock Project',
+        command: 'rm -rf pubspec.lock',
+        pwd: pwd,
+      ),
 
     ///! iOS
     if (result.flag('ios') && iosDir.existsSync()) ...[
@@ -57,11 +57,12 @@ Future<void> main(List<String> args) async {
         command: 'rm -rf .symlinks',
         pwd: iosDir.path,
       ),
-      Work(
-        description: 'Remove Podfile.lock',
-        command: 'rm -rf Podfile.lock',
-        pwd: iosDir.path,
-      ),
+      if (result.flag('lock-files'))
+        Work(
+          description: 'Remove Podfile.lock',
+          command: 'rm -rf Podfile.lock',
+          pwd: iosDir.path,
+        ),
     ],
 
     ///! Home
@@ -92,8 +93,8 @@ Future<void> main(List<String> args) async {
       Work(
         description: 'Generate Freezed Models',
         command: 'dart run build_runner build --delete-conflicting-outputs',
-      pwd: pwd,
-    ),
+        pwd: pwd,
+      ),
   ];
 
   Printer.write('');
