@@ -6,11 +6,11 @@ import 'package:args/args.dart';
 
 Future<void> main(List<String> args) async {
   final parser = ArgParser()
-    ..addFlag('clean', abbr: 'c', defaultsTo: true)
-    ..addFlag('ios', abbr: 'i', defaultsTo: true)
-    ..addFlag('freezed', abbr: 'f', defaultsTo: true)
-    ..addFlag('l10n', abbr: 'l', defaultsTo: true)
-    ..addFlag('lock-files', abbr: 'lf')
+    ..addFlag('clean', defaultsTo: true)
+    ..addFlag('ios', defaultsTo: true)
+    ..addFlag('freezed', defaultsTo: true)
+    ..addFlag('l10n', defaultsTo: true)
+    ..addFlag('lock-files')
     ..addFlag('help', abbr: 'h')
     ..addFlag('verbose', abbr: 'v');
 
