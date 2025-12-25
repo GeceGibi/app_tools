@@ -36,7 +36,7 @@ Future<void> main(List<String> args) async {
     if (result.flag('lock-files'))
       Work(
         description: 'Remove Pub Lock Project',
-        command: 'rm -rf pubspec.lock',
+        command: 'rm -rf pubspec.lock .flutter-plugins .flutter-plugins-dependencies',
         pwd: pwd,
       ),
 
@@ -54,7 +54,7 @@ Future<void> main(List<String> args) async {
       ),
       Work(
         description: 'Remove Cached iOS Flutter Libs',
-        command: 'rm -rf .symlinks',
+        command: 'rm -rf .symlinks Flutter/Generated.xcconfig',
         pwd: iosDir.path,
       ),
       if (result.flag('lock-files'))
@@ -103,7 +103,11 @@ Future<void> main(List<String> args) async {
   Printer.write('');
 
   for (final work in works) {
-    await work.run(verbose: result.flag('verbose'));
+    final exitCode = await work.run(verbose: result.flag('verbose'));
+    if (exitCode != 0) {
+      Printer.error('Execution stopped due to failure in: ${work.description}');
+      exit(exitCode);
+    }
     Printer.write('');
   }
 

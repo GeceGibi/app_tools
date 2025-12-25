@@ -87,6 +87,7 @@ String generateVersionName({
   } else if (minor) {
     final newMinor = int.parse(nameSegments[1]) + 1;
     nameSegments[1] = newMinor.toString();
+    nameSegments[2] = '0'; // Reset patch
 
     if (newMinor.toString().length > formatSegments[1].length) {
       nameSegments[1] = '0';
@@ -95,10 +96,9 @@ String generateVersionName({
   }
   /// Major
   else if (major) {
-    final newMajor = int.parse(nameSegments[0]) + 1;
-    if (newMajor.toString().length <= formatSegments[0].length) {
-      nameSegments[0] = newMajor.toString();
-    }
+    nameSegments[0] = (int.parse(nameSegments[0]) + 1).toString();
+    nameSegments[1] = '0'; // Reset minor
+    nameSegments[2] = '0'; // Reset patch
   }
 
   return nameSegments.join('.');
@@ -109,7 +109,15 @@ int generateVersionCode({
   required int versionCode,
   required String platform,
   bool autoBump = true,
+  bool patch = false,
+  bool minor = false,
+  bool major = false,
 }) {
+  // If version name is incremented (patch/minor/major), version code must be incremented by at least 1
+  if (patch || minor || major) {
+    autoBump = true; 
+  }
+
   var format = '1yyMMdd';
 
   for (final entry in config.formats.versionCode) {
@@ -234,6 +242,9 @@ void main(List<String> args) async {
     platform: platform,
     versionCode: int.parse(payload['versionCode']!),
     autoBump: arguments.flag('auto-bump-version-code'),
+    patch: arguments.flag('patch'),
+    minor: arguments.flag('minor'),
+    major: arguments.flag('major'),
   );
 
   final versionName = generateVersionName(

@@ -36,14 +36,16 @@ class Work {
 
     final process =
         await Process.start(
-            'bash',
+            'sh',
             ['-c', command],
             workingDirectory: pwd,
             runInShell: true,
           )
           ..stderr.listen((bytes) {
             final text = utf8.decode(bytes).trim();
-            return Printer.error(text);
+            if (text.isEmpty) return;
+            // Some tools use stderr for progress/info, so we write instead of error
+            Printer.write(text);
           })
           ..stdout.listen((bytes) {
             if (!verbose) {
@@ -51,6 +53,7 @@ class Work {
             }
 
             final text = utf8.decode(bytes).trim();
+            if (text.isEmpty) return;
             Printer.write(text);
           });
 

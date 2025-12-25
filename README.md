@@ -54,9 +54,10 @@ Outputs:
 
 Version/Tag rules:
 - Finds the latest matching git tag and parses it; if none, starts with `1.0.0/1`.
-- `versionName`: bumped by `--patch | --minor | --major`; cascades when width overflows.
-- `versionCode`: date-based; if not greater than current and auto bump is on, increments by 1.
+- `versionName`: bumped by `--patch | --minor | --major`. Correctly resets lower segments (e.g., `1.2.5` + `--minor` = `1.3.0`).
+- `versionCode`: date-based; if not greater than current or if `versionName` has changed, increments by at least 1.
 - All rules are configurable via `versioning.yaml`.
+- Strict tag parsing: Ensures the latest tag matches the defined template exactly.
 
 `versioning.yaml` example:
 
@@ -76,7 +77,7 @@ Notes:
 - Operates with git tags in the repo; uses the pattern to get the latest tag.
 
 ### atclean
-Cleans the project and regenerates required artifacts.
+Cleans the project and regenerates required artifacts. Stops execution if any step fails.
 
 ```bash
 # Default flow (clean, pub get, iOS pods if present, l10n and freezed)
@@ -85,7 +86,7 @@ atclean
 # Verbose output
 atclean -v
 
-# Also remove lock files
+# Also remove lock files (includes .flutter-plugins cleaning)
 atclean -lf
 ```
 
