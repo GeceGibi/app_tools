@@ -94,8 +94,8 @@ Flags:
 - -c, --clean (default: true)
 - -i, --ios (default: true; runs pod steps if `ios` folder exists)
 - -f, --freezed (default: true; generates models via build_runner)
-- -l, --l10n (default: true; runs if `l10n.yaml` exists)
-- -lf, --lock-files (optional; removes `pubspec.lock` and `Podfile.lock`)
+- -n, --l10n (default: true; runs if `l10n.yaml` exists)
+- -l, --lock-files (optional; removes `pubspec.lock` and `Podfile.lock`)
 - -v, --verbose; -h, --help
 
 ## Features
