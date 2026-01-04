@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:app_tools/printer.dart';
 
 class Work {
@@ -34,35 +35,37 @@ class Work {
       Printer.info('├❯ Working Directory: $pwd');
     }
 
-    final process =
-        await Process.start(
-            'sh',
-            ['-c', command],
-            workingDirectory: pwd,
-            runInShell: true,
-          )
-          ..stderr.listen((bytes) {
-            final text = utf8.decode(bytes).trim();
-            if (text.isEmpty) return;
-            // Some tools use stderr for progress/info, so we write instead of error
-            Printer.write(text);
-          })
-          ..stdout.listen((bytes) {
-            if (!verbose) {
-              return;
-            }
+    final stopwatch = Stopwatch()..start();
 
-            final text = utf8.decode(bytes).trim();
-            if (text.isEmpty) return;
-            Printer.write(text);
-          });
+    final process = await Process.start(
+      'sh',
+      ['-c', command],
+      workingDirectory: pwd,
+      runInShell: true,
+    );
+
+    // Stdout/Stderr handling with proper utf8 transformation
+    process.stderr.transform(utf8.decoder).listen((text) {
+      final trimmed = text.trim();
+      if (trimmed.isEmpty) return;
+      Printer.write(trimmed);
+    });
+
+    process.stdout.transform(utf8.decoder).listen((text) {
+      if (!verbose) return;
+      final trimmed = text.trim();
+      if (trimmed.isEmpty) return;
+      Printer.write(trimmed);
+    });
 
     final exitCode = await process.exitCode;
+    stopwatch.stop();
+    final elapsed = (stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1);
 
     if (exitCode == 0) {
-      Printer.success('└❯ Done, exitCode($exitCode)');
+      Printer.success('└❯ Done (${elapsed}s), exitCode($exitCode)');
     } else {
-      Printer.error('└❯ Failed, exitCode($exitCode)');
+      Printer.error('└❯ Failed (${elapsed}s), exitCode($exitCode)');
     }
 
     return exitCode;
