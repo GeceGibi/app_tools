@@ -15,8 +15,8 @@ void main(List<String> args) async {
       defaultsTo: true,
     )
     ///
-    ..addFlag('minor', help: 'Increment minor version')
     ..addFlag('major', help: 'Increment major version')
+    ..addFlag('minor', help: 'Increment minor version')
     ..addFlag('patch', help: 'Increment patch version')
     ///
     ..addFlag('dry-run', help: 'Dry run')
@@ -29,6 +29,24 @@ void main(List<String> args) async {
   if (arguments.flag('help')) {
     Printer.write(parser.usage);
     return;
+  }
+
+  final patch = arguments.flag('patch');
+  final minor = arguments.flag('minor');
+  final major = arguments.flag('major');
+
+  final bumpFlags = [
+    if (patch) 'patch',
+    if (minor) 'minor',
+    if (major) 'major',
+  ];
+
+  if (bumpFlags.length > 1) {
+    Printer.error(
+      'Only one of --patch, --minor, --major can be used '
+      '(got: ${bumpFlags.join(', ')})',
+    );
+    exit(64);
   }
 
   final cwd = Directory.current.path;
@@ -68,18 +86,18 @@ void main(List<String> args) async {
     platform: platform,
     currentVersionCode: int.parse(payload['versionCode']!),
     autoBump: arguments.flag('auto-bump-version-code'),
-    patch: arguments.flag('patch'),
-    minor: arguments.flag('minor'),
-    major: arguments.flag('major'),
+    patch: patch,
+    minor: minor,
+    major: major,
   );
 
   final versionName = manager.generateVersionName(
     config: config,
     platform: platform,
     currentVersionName: payload['versionName']!,
-    patch: arguments.flag('patch'),
-    minor: arguments.flag('minor'),
-    major: arguments.flag('major'),
+    patch: patch,
+    minor: minor,
+    major: major,
   );
 
   final newTag = manager.generateTag(config.formats.tag, (variable) {

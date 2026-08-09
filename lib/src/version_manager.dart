@@ -56,6 +56,20 @@ class VersionManager {
     return processedFormat.replaceAll('--', '-');
   }
 
+  String? _formatForPlatform(
+    List<Map<String, String>> formats,
+    String platform,
+  ) {
+    String? anyFormat;
+    for (final entry in formats) {
+      if (entry.containsKey(platform)) {
+        return entry[platform];
+      }
+      anyFormat ??= entry['any'];
+    }
+    return anyFormat;
+  }
+
   String generateVersionName({
     required String currentVersionName,
     required Versioning config,
@@ -68,14 +82,8 @@ class VersionManager {
       return currentVersionName;
     }
 
-    var format = 'd.dd.dd';
-
-    for (final entry in config.formats.versionName) {
-      if (entry.containsKey(platform)) {
-        format = entry[platform]!;
-        break;
-      }
-    }
+    final format =
+        _formatForPlatform(config.formats.versionName, platform) ?? 'd.dd.dd';
 
     final formatSegments = format.split('.');
     final nameSegments = currentVersionName.split('.');
@@ -124,14 +132,8 @@ class VersionManager {
       shouldBump = true;
     }
 
-    var format = '1yyMMdd';
-
-    for (final entry in config.formats.versionCode) {
-      if (entry.containsKey(platform)) {
-        format = entry[platform]!;
-        break;
-      }
-    }
+    final format =
+        _formatForPlatform(config.formats.versionCode, platform) ?? '1yyMMdd';
 
     final now = DateTime.now();
     final dateFormat = DateFormat(format);
@@ -170,12 +172,27 @@ class VersionManager {
 
     Printer.info('search-tag: $pattern');
 
-    final result = await Process.run('sh', [
-      '-c',
-      'git tag -l "$pattern" --sort=-version:refname | head -n 1',
+    final result = await Process.run('git', [
+      'tag',
+      '-l',
+      pattern,
+      '--sort=-version:refname',
     ]);
 
-    final foundedTag = result.stdout.toString().trim();
+    if (result.exitCode != 0) {
+      final stderr = result.stderr.toString().trim();
+      Printer.error(
+        'Failed to list git tags (exit ${result.exitCode})'
+        '${stderr.isEmpty ? '' : ': $stderr'}',
+      );
+      exit(result.exitCode);
+    }
+
+    final foundedTag = result.stdout
+        .toString()
+        .split('\n')
+        .map((line) => line.trim())
+        .firstWhere((line) => line.isNotEmpty, orElse: () => '');
 
     if (foundedTag.isEmpty) {
       Printer.warning('No tag found');

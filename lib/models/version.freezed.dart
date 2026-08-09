@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Versioning {
 
-@JsonKey(name: 'export-env-name') String get envName; VersioningFormat get formats;
+@JsonKey(name: 'env-name') String get envName; VersioningFormat get formats;
 /// Create a copy of Versioning
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $VersioningCopyWith<$Res>  {
   factory $VersioningCopyWith(Versioning value, $Res Function(Versioning) _then) = _$VersioningCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'export-env-name') String envName, VersioningFormat formats
+@JsonKey(name: 'env-name') String envName, VersioningFormat formats
 });
 
 
@@ -163,7 +163,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'export-env-name')  String envName,  VersioningFormat formats)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'env-name')  String envName,  VersioningFormat formats)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Versioning() when $default != null:
 return $default(_that.envName,_that.formats);case _:
@@ -184,7 +184,7 @@ return $default(_that.envName,_that.formats);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'export-env-name')  String envName,  VersioningFormat formats)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'env-name')  String envName,  VersioningFormat formats)  $default,) {final _that = this;
 switch (_that) {
 case _Versioning():
 return $default(_that.envName,_that.formats);case _:
@@ -204,7 +204,7 @@ return $default(_that.envName,_that.formats);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'export-env-name')  String envName,  VersioningFormat formats)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'env-name')  String envName,  VersioningFormat formats)?  $default,) {final _that = this;
 switch (_that) {
 case _Versioning() when $default != null:
 return $default(_that.envName,_that.formats);case _:
@@ -219,10 +219,10 @@ return $default(_that.envName,_that.formats);case _:
 @JsonSerializable()
 
 class _Versioning implements Versioning {
-  const _Versioning({@JsonKey(name: 'export-env-name') this.envName = 'VERSION_TAG', this.formats = const VersioningFormat()});
+  const _Versioning({@JsonKey(name: 'env-name') this.envName = 'VERSION_TAG', this.formats = const VersioningFormat()});
   factory _Versioning.fromJson(Map<String, dynamic> json) => _$VersioningFromJson(json);
 
-@override@JsonKey(name: 'export-env-name') final  String envName;
+@override@JsonKey(name: 'env-name') final  String envName;
 @override@JsonKey() final  VersioningFormat formats;
 
 /// Create a copy of Versioning
@@ -258,7 +258,7 @@ abstract mixin class _$VersioningCopyWith<$Res> implements $VersioningCopyWith<$
   factory _$VersioningCopyWith(_Versioning value, $Res Function(_Versioning) _then) = __$VersioningCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'export-env-name') String envName, VersioningFormat formats
+@JsonKey(name: 'env-name') String envName, VersioningFormat formats
 });
 
 
