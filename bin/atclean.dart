@@ -5,13 +5,10 @@ import 'package:args/args.dart';
 
 Future<void> main(List<String> args) async {
   final parser = ArgParser()
-    ..addFlag('clean', abbr: 'c', defaultsTo: true)
-    ..addFlag('ios', abbr: 'i', defaultsTo: true)
-    ..addFlag('freezed', abbr: 'f', defaultsTo: true)
-    ..addFlag('l10n', abbr: 'n', defaultsTo: true) // n for l10n
-    ..addFlag('lock-files', abbr: 'l')
-    ..addFlag('help', abbr: 'h')
-    ..addFlag('verbose', abbr: 'v');
+    ..addFlag('deep', abbr: 'd', help: 'Clean lock files & CocoaPods cache')
+    ..addFlag('quick', abbr: 'q', help: 'Skip codegen (freezed & l10n)')
+    ..addFlag('verbose', abbr: 'v', help: 'Print verbose logs')
+    ..addFlag('help', abbr: 'h', negatable: false, help: 'Show this help');
 
   final result = parser.parse(args);
 
@@ -24,11 +21,8 @@ Future<void> main(List<String> args) async {
   final manager = CleanManager(pwd: pwd);
 
   await manager.run(
-    clean: result.flag('clean'),
-    ios: result.flag('ios'),
-    freezed: result.flag('freezed'),
-    l10n: result.flag('l10n'),
-    lockFiles: result.flag('lock-files'),
+    deep: result.flag('deep'),
+    quick: result.flag('quick'),
     verbose: result.flag('verbose'),
   );
 }

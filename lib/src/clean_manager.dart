@@ -9,24 +9,24 @@ class CleanManager {
   final String pwd;
 
   Future<void> run({
-    bool clean = true,
-    bool ios = true,
-    bool freezed = true,
-    bool l10n = true,
-    bool lockFiles = false,
+    bool deep = false,
+    bool quick = false,
     bool verbose = false,
   }) async {
     final iosDir = Directory('$pwd/ios');
     final l10nConfig = File('$pwd/l10n.yaml');
+    final pubspecFile = File('$pwd/pubspec.yaml');
+    final hasBuildRunner =
+        pubspecFile.existsSync() &&
+        pubspecFile.readAsStringSync().contains('build_runner:');
 
     final works = <Work>[
-      if (clean)
-        Work(
-          description: 'Clean Flutter Project',
-          command: 'flutter clean',
-          pwd: pwd,
-        ),
-      if (lockFiles)
+      Work(
+        description: 'Clean Flutter Project',
+        command: 'flutter clean',
+        pwd: pwd,
+      ),
+      if (deep)
         Work(
           description: 'Remove Pub Lock Project',
           command:
@@ -36,10 +36,10 @@ class CleanManager {
         ),
 
       ///! iOS
-      if (ios && iosDir.existsSync()) ...[
+      if (iosDir.existsSync()) ...[
         Work(
           description: 'Pod deintegrate',
-          command: 'pod deintegrate',
+          command: 'pod deintegrate || true',
           pwd: iosDir.path,
         ),
         Work(
@@ -52,12 +52,23 @@ class CleanManager {
           command: 'rm -rf .symlinks Flutter/Generated.xcconfig',
           pwd: iosDir.path,
         ),
-        if (lockFiles)
+        if (deep) ...[
           Work(
             description: 'Remove Podfile.lock',
             command: 'rm -rf Podfile.lock',
             pwd: iosDir.path,
           ),
+          Work(
+            description: 'Clean CocoaPods Cache',
+            command: 'pod cache clean --all',
+            pwd: iosDir.path,
+          ),
+          Work(
+            description: 'Remove Xcode DerivedData',
+            command: 'rm -rf ~/Library/Developer/Xcode/DerivedData',
+            pwd: iosDir.path,
+          ),
+        ],
       ],
 
       ///! Home
@@ -68,23 +79,21 @@ class CleanManager {
       ),
 
       ///! iOS
-      if (ios && iosDir.existsSync())
+      if (iosDir.existsSync())
         Work(
           description: 'Pod install & update',
           command: 'pod install --repo-update',
           pwd: iosDir.path,
         ),
 
-      ///! Home
-      if (l10n && l10nConfig.existsSync())
+      ///! Codegen
+      if (!quick && l10nConfig.existsSync())
         Work(
           description: 'Generate L10N',
           command: 'flutter gen-l10n',
           pwd: pwd,
         ),
-
-      ///! Freezed
-      if (freezed)
+      if (!quick && hasBuildRunner)
         Work(
           description: 'Generate Freezed Models',
           command: 'dart run build_runner build --delete-conflicting-outputs',
